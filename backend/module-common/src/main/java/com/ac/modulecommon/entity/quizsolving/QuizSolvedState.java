@@ -1,5 +1,6 @@
 package com.ac.modulecommon.entity.quizsolving;
 
+import com.ac.modulecommon.entity.AuditingCreateUpdateEntity;
 import com.ac.modulecommon.entity.quiz.Quiz;
 import com.ac.modulecommon.entity.user.User;
 import lombok.AccessLevel;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "quiz_solved_states")
-public class QuizSolvedState {
+public class QuizSolvedState extends AuditingCreateUpdateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,10 @@ public class QuizSolvedState {
     private Quiz quiz;
 
     private SolvedState solvedState;
+
+    public void update(SolvedState solvedState) {
+        this.solvedState = solvedState;
+    }
 
     @Builder
     private QuizSolvedState(Long id, User user, Quiz quiz, SolvedState solvedState) {
