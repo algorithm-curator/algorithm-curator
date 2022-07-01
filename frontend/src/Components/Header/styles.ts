@@ -6,3 +6,9 @@ export const Container = styled.div`
 	width: 100%;
 	height: 75px;
 `;
+
+export const HeaderWrapper = styled.div`
+	display: flex;
+	justify-content: space-between;
+	margin: 1rem 1.5rem;
+`;

@@ -1,8 +1,19 @@
 import React from "react";
-import { Container } from "./styles";
+import { Container, HeaderWrapper } from "./styles";
+import Logo from "./Logo";
+import LogOff from "./LogOff";
+import LogOn from "./LogOn";
 
 function Header() {
-	return <Container> Header </Container>;
+	return (
+		<Container>
+			<HeaderWrapper>
+				<Logo />
+				<LogOff />
+				{/* <LogOn /> */}
+			</HeaderWrapper>
+		</Container>
+	);
 }
 
 export default Header;
