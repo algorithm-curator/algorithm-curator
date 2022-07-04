@@ -1,10 +1,11 @@
 import React from "react";
-import { Container } from "./styles";
+import { Container, Title, DrawButton } from "./styles";
 
 function Main() {
 	return (
 		<Container>
-			<div>Main</div>
+			<Title>매일 알고리즘 문제를 고르는 게 귀찮다면?</Title>
+			<DrawButton>🔘</DrawButton>
 		</Container>
 	);
 }

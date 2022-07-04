@@ -90,8 +90,10 @@ section {
 }
 body {
 	line-height: 1;
-	/* Default font */
+	/* Custom Default font */
 	font-family: "Gothic A1", sans-serif;
+	/* Custom Default Background-Color */
+	background-color: #4d4acf;
 }
 ol,
 ul {
