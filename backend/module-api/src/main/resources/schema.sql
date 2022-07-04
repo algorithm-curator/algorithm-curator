@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS quiz_type_mappings CASCADE;
 CREATE TABLE users
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
+    oauth_id            bigint          NOT NULL COMMENT 'oauth id',
     nickname            varchar(20)     DEFAULT NULL COMMENT '닉네임',
     profile_image       varchar(250)    DEFAULT NULL COMMENT '프로필 사진',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
