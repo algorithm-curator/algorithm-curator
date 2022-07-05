@@ -49,17 +49,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<?> handleApiException(ApiException e) {
-        switch (e.getExceptionType()) {
-            case NOT_FOUND:
-                return createResponse(e, HttpStatus.NOT_FOUND);
-            case UNAUTHORIZED:
-                return createResponse(e, HttpStatus.FORBIDDEN);
-            case DUPLICATED_VALUE:
-                return createResponse(e, HttpStatus.BAD_REQUEST);
-            default:
-                log.warn("Unexpected apiException occurred: {}", e.getMessage(), e);
-                return createResponse(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return createResponse(e, e.getType().getStatus());
     }
 
     /**

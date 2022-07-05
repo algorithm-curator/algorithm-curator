@@ -9,16 +9,16 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 @Getter
 public class ApiException extends ServiceRuntimeException {
 
-    private final EnumApiException exceptionType;
+    private final EnumApiException type;
 
     /**
      * ApiException TYPE1
      *
      * Usage: 단순히 어떤 타입의 예외이고, 추가적으로 message만 기입하고 싶을 때
      */
-    public ApiException(EnumApiException exceptionType, String message) {
+    public ApiException(EnumApiException type, String message) {
         super(new String[]{message});
-        this.exceptionType = exceptionType;
+        this.type = type;
     }
 
     /**
@@ -26,15 +26,15 @@ public class ApiException extends ServiceRuntimeException {
      *
      * Usage: Entity 데이터 조회 전용. 어떤 Entity Class를 못 찾았고, 그 때의 해당 parameter return
      */
-    public ApiException(EnumApiException exceptionType, Class<?> cls, Object... values) {
-        this(exceptionType, cls.getSimpleName(), values);
+    public ApiException(EnumApiException type, Class<?> cls, Object... values) {
+        this(type, cls.getSimpleName(), values);
     }
 
-    private ApiException(EnumApiException exceptionType, String targetName, Object... values) {
+    private ApiException(EnumApiException type, String targetName, Object... values) {
         super(new String[]{targetName,
                 (isNotEmpty(values)) ? StringUtils.join(values, ",") : ""});
 
-        this.exceptionType = exceptionType;
+        this.type = type;
     }
 
     /**
@@ -42,11 +42,11 @@ public class ApiException extends ServiceRuntimeException {
      */
     @Override
     public String getMessage() {
-        return MessageUtils.getMessage(exceptionType.getMessageDetailKey(), getParams());
+        return MessageUtils.getMessage(type.getMessageDetailKey(), getParams());
     }
 
     @Override
     public String toString() {
-        return MessageUtils.getMessage(exceptionType.getMessageKey());
+        return MessageUtils.getMessage(type.getMessageKey());
     }
 }

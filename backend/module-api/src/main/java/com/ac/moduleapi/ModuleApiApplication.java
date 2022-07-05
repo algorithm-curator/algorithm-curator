@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaAuditing
 @EntityScan(basePackages = {"com.ac.modulecommon"})
 @EnableJpaRepositories(basePackages = {"com.ac.modulecommon"})
-@ConfigurationPropertiesScan(basePackages = {"com.ac.moduleapi"})
+@ConfigurationPropertiesScan(basePackages = {"com.ac.modulecommon", "com.ac.moduleapi"})
 @SpringBootApplication(scanBasePackages = {"com.ac.modulecommon", "com.ac.moduleapi"})
 public class ModuleApiApplication {
 

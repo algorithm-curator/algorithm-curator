@@ -15,6 +15,12 @@ oauth:
     login-url: https://kapi.kakao.com/v2/user/me
     logout-url: https://kapi.kakao.com/v1/user/logout
 
+jwt:
+  header: api_key
+  issuer: algorithm-curator
+  client-secret: algorithm-curator
+  expiry-seconds: 7200 # 2시간
+
 ---
 spring:
   config:

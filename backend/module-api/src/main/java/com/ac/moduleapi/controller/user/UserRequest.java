@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
  * 사용자 API 관련 요청
  */
 public class UserRequest {
+
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
     public static class JoinRequest {
