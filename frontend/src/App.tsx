@@ -5,6 +5,8 @@ import Header from "Components/Header";
 import Main from "Pages/Main";
 import ProblemToday from "Pages/ProblemToday";
 import ProblemList from "Pages/ProblemList";
+import Rank from "Pages/Rank";
+import MyChart from "Pages/MyChart";
 import "./Styles/style.css";
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
 				<Route path="/" element={<Main />} />
 				<Route path="/problem/" element={<ProblemToday />} />
 				<Route path="/problemlist" element={<ProblemList />} />
+				<Route path="/mychart" element={<MyChart />} />
+				<Route path="/rank" element={<Rank />} />
 			</Routes>
 		</BrowserRouter>
 	);
