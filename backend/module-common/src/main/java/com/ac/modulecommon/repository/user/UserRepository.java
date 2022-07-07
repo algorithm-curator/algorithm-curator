@@ -3,5 +3,10 @@ package com.ac.modulecommon.repository.user;
 import com.ac.modulecommon.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long>, UserCustomRepository {
+    Optional<User> findById(Long id);
+
+    Optional<User> findByOauthId(Long oauthId);
 }
