@@ -1,6 +1,7 @@
 import React from "react";
 
 import ProblemAllList from "Components/Problem/ProblemAllList";
+import ProblemListTab from "Components/Problem/ProblemListTab";
 import { ChartLink, Container, Title, TitleChartWrapper } from "./styles";
 
 function ProblemList() {
@@ -11,6 +12,7 @@ function ProblemList() {
 				<ChartLink to="/chart">📊차트로 파악하기</ChartLink>
 			</TitleChartWrapper>
 			<ProblemAllList />
+			<ProblemListTab />
 		</Container>
 	);
 }
