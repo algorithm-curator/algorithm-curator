@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ac.modulecommon.entity.quiz.QuizLevel.GOLD;
-import static com.ac.modulecommon.entity.quiz.QuizLevel.SILVER;
+import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_GOLD;
+import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_SILVER;
 import static com.ac.modulecommon.entity.quiz.QuizPlatform.BOJ;
-import static com.ac.modulecommon.entity.quiz.QuizPlatform.PRGRMS;
+import static com.ac.modulecommon.entity.quiz.QuizPlatform.PG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -69,7 +69,7 @@ class QuizSolvedStateServiceMockTest {
         mockQuiz = Quiz.builder().id(1L)
                                 .title("mockTitle")
                                 .quizUrl("mockUrl")
-                                .level(SILVER)
+                                .level(BOJ_SILVER)
                                 .platform(BOJ).build();
 
         mockSolvedState = QuizSolvedState.builder()
@@ -87,7 +87,7 @@ class QuizSolvedStateServiceMockTest {
         List<QuizQueryDto> dtoList = new ArrayList<>();
         for (int loop = 1; loop <= loopSize; ++loop) {
             Long id = null;
-            QuizQueryDto dto = new QuizQueryDto(id, 1L, "title2", "www.naver.com", GOLD, PRGRMS);
+            QuizQueryDto dto = new QuizQueryDto(id, 1L, "title2", "www.naver.com", BOJ_GOLD, PG);
             dtoList.add(dto);
         }
 
@@ -117,7 +117,7 @@ class QuizSolvedStateServiceMockTest {
         List<QuizQueryDto> dtoList = new ArrayList<>();
         for (int loop = 1; loop <= loopSize; ++loop) {
             Long id = (long)loop;
-            QuizQueryDto dto = new QuizQueryDto(id, 1L, "title2", "www.naver.com", GOLD, PRGRMS);
+            QuizQueryDto dto = new QuizQueryDto(id, 1L, "title2", "www.naver.com", BOJ_GOLD, PG);
             dtoList.add(dto);
         }
 
@@ -142,11 +142,11 @@ class QuizSolvedStateServiceMockTest {
     @Test
     public void 이미_저장된_정보는_update문으로_상태가_변경되고_새로_저장된_정보만_insert_된다() {
         //given
-        QuizQueryDto nullDto1 = new QuizQueryDto(null, 1L, "title1", "www.naver.com", SILVER, BOJ);
-        QuizQueryDto notNullDto1 = new QuizQueryDto(1L, 1L, "title2", "www.naver.com", GOLD, PRGRMS);
-        QuizQueryDto notNullDto2 = new QuizQueryDto(2L, 1L, "title3", "www.naver.com", GOLD, BOJ);
-        QuizQueryDto notNullDto3 = new QuizQueryDto(3L, 1L, "title4", "www.naver.com", SILVER, PRGRMS);
-        QuizQueryDto nullDto2 = new QuizQueryDto(null, 1L, "title5", "www.naver.com", GOLD, BOJ);
+        QuizQueryDto nullDto1 = new QuizQueryDto(null, 1L, "title1", "www.naver.com", BOJ_SILVER, BOJ);
+        QuizQueryDto notNullDto1 = new QuizQueryDto(1L, 1L, "title2", "www.naver.com", BOJ_GOLD, PG);
+        QuizQueryDto notNullDto2 = new QuizQueryDto(2L, 1L, "title3", "www.naver.com", BOJ_GOLD, BOJ);
+        QuizQueryDto notNullDto3 = new QuizQueryDto(3L, 1L, "title4", "www.naver.com", BOJ_SILVER, PG);
+        QuizQueryDto nullDto2 = new QuizQueryDto(null, 1L, "title5", "www.naver.com", BOJ_GOLD, BOJ);
 
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(nullDto1,
                                                                             notNullDto1,

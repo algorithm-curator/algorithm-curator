@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toMap;
 @AllArgsConstructor
 public enum QuizPlatform {
     BOJ(0, "백준"),
-    PRGRMS(1, "프로그래머스");
+    PG(1, "프로그래머스");
 
     private static final Map<Integer, QuizPlatform> quizPlatformMap =
             Stream.of(values()).collect(toMap(QuizPlatform::getCode, value -> value));

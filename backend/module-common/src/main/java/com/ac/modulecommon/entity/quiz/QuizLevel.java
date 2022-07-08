@@ -16,8 +16,14 @@ import static java.util.stream.Collectors.toMap;
 @Getter
 @AllArgsConstructor
 public enum QuizLevel {
-    SILVER(0, "실버"),
-    GOLD(1, "골드");
+    BOJ_SILVER(0, "실버"),
+    BOJ_GOLD(1, "골드"),
+    BOJ_PLATINUM(2, "플래티넘"),
+    PG_LEVEL_ONE(100, "레벨1"),
+    PG_LEVEL_TWO(101, "레벨2"),
+    PG_LEVEL_THREE(102, "레벨3"),
+    PG_LEVEL_FOUR(103, "레벨4"),
+    PG_LEVEL_FIVE(104, "레벨5");
 
     private static final Map<Integer, QuizLevel> quizLevelMap =
             Stream.of(values()).collect(toMap(QuizLevel::getCode, value -> value));
