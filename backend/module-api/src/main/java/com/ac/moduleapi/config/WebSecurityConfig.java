@@ -18,6 +18,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 /**
  * SpringSecurity, 인증 인가 관련 설정 및 관련 Bean 모음
@@ -63,6 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
             .headers()
                 .disable()
+            .cors()
+                .configurationSource(configurationSource())
+                .and()
             .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(unauthorizedHandler)
@@ -81,5 +89,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable();
         http
             .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    public CorsConfigurationSource configurationSource() {
+        List<String> clientUrls = List.of("http://localhost:3000");
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(clientUrls);
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

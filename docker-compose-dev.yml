@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  module-api:
+    container_name: module-api
+    build:
+      context: ./backend
+      dockerfile: ./module-api/Dockerfile.dev
+    ports:
+      - "8080:8080"

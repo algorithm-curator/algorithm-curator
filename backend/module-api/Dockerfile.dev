@@ -1,0 +1,16 @@
+FROM openjdk:11 as builder
+
+COPY ./ ./
+
+RUN chmod +x ./gradlew
+
+RUN ./gradlew clean :module-api:build -x test
+
+
+FROM openjdk:11-jre-slim
+
+WORKDIR /app
+
+COPY --from=builder module-api/build/libs/*.jar ./module-api.jar
+
+ENTRYPOINT ["java","-jar","./module-api.jar"]
