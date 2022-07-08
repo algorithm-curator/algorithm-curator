@@ -23,6 +23,7 @@ public class AuthDto {
         @NotBlank(message = "accessToken 값은 필수입니다.")
         private String accessToken;
     }
+
     @Getter
     @Builder
     @JsonNaming(SnakeCaseStrategy.class)
@@ -31,10 +32,14 @@ public class AuthDto {
         private String apiToken;
 
         //userInfo
+        private String nickname;
+        private String profileImage;
 
         public static AuthResponse of(String apiToken, User user) {
             return AuthResponse.builder()
                     .apiToken(apiToken)
+                    .nickname(user.getNickname())
+                    .profileImage(user.getProfileImage())
                     .build();
         }
     }

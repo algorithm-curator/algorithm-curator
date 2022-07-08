@@ -61,6 +61,7 @@ class QuizSolvedStateServiceMockTest {
     @BeforeEach
     public void init() {
         mockUser = User.builder().id(1L)
+                                .oauthId(12345L)
                                 .nickname("mock")
                                 .profileImage("mock")
                                 .build();

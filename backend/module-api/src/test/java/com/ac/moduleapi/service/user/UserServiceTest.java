@@ -14,8 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -135,5 +134,65 @@ class UserServiceTest {
 
         //then
         verify(userRepository).findByOauthId(anyLong());
+    }
+
+    @Test
+    public void 회원정보_중_닉네임만_수정할_수_있다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        Long userId = mockUser.getId();
+        String newNickname = "new nickname";
+
+        //when
+        userService.update(userId, newNickname);
+
+        //then
+        assertThat(mockUser.getNickname()).isEqualTo(newNickname);
+        verify(userRepository).findById(anyLong());
+    }
+
+    @Test
+    public void 회원정보_중_닉네임과_프로필_이미지를_수정할_수_있다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        Long userId = mockUser.getId();
+        String newNickname = "new nickname";
+        String newProfileImage = "new profileImage";
+
+        //when
+        userService.update(userId, newNickname, newProfileImage);
+
+        //then
+        assertThat(mockUser.getNickname()).isEqualTo(newNickname);
+        assertThat(mockUser.getProfileImage()).isEqualTo(newProfileImage);
+        verify(userRepository).findById(anyLong());
+    }
+
+    @Test
+    public void 닉네임_중복여부_체크_시_새로운_닉네임은_true를_반환한다() {
+        //given
+        given(userRepository.exists(anyString())).willReturn(false);
+        String nickname = "new nickname";
+
+        //when
+        boolean isUnique = userService.isUniqueNickname(nickname);
+
+        //then
+        assertThat(isUnique).isEqualTo(true);
+        verify(userRepository).exists(anyString());
+    }
+
+    @Test
+    public void 닉네임_중복여부_체크_시_기존에_존재하는_닉네임은_false를_반환한다() {
+        //given
+        given(userRepository.exists(anyString())).willReturn(true);
+        String nickname = "existed nickname";
+
+        //when
+        boolean isUnique = userService.isUniqueNickname(nickname);
+
+        //then
+        assertThat(isUnique).isEqualTo(false);
+        verify(userRepository).exists(anyString());
     }
 }

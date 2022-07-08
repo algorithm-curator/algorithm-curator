@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -51,5 +52,34 @@ public class UserServiceImpl implements UserService {
                                 .orElseThrow(() -> new ApiException(NOT_FOUND,
                                                                     User.class,
                                                                     String.format("oauthId = %s", oauthId)));
+    }
+
+    @Override
+    @Transactional
+    public long update(Long id, String nickname) {
+        checkArgument(isNotBlank(nickname), "nickname 값은 필수입니다.");
+
+        User user = getUser(id);
+        user.update(nickname);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public long update(Long id, String nickname, String profileImage) {
+        checkArgument(isNotBlank(nickname), "nickname 값은 필수입니다.");
+        checkArgument(isNotBlank(profileImage), "profileImage 값은 필수입니다.");
+
+        User user = getUser(id);
+        user.update(nickname, profileImage);
+        return user.getId();
+    }
+
+    @Override
+    public boolean isUniqueNickname(String nickname) {
+        checkArgument(isNotBlank(nickname), "nickname 값은 필수입니다.");
+        checkArgument(nickname.length() <= 20, "nickname 길이는 20자 이하만 가능합니다.");
+
+        return !userRepository.exists(nickname);
     }
 }

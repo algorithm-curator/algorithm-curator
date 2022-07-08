@@ -3,6 +3,7 @@ package com.ac.moduleapi.controller.user;
 import com.ac.modulecommon.entity.user.User;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,6 +25,30 @@ public class UserResponse {
                     .id(user.getId())
                     .oauthId(user.getOauthId())
                     .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @JsonNaming(SnakeCaseStrategy.class)
+    public static class UpdateResponse {
+
+        private Long id;
+
+        public static UpdateResponse from(Long id) {
+            return new UpdateResponse(id);
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @JsonNaming(SnakeCaseStrategy.class)
+    public static class NicknameResponse {
+
+        private boolean result;
+
+        public static NicknameResponse from(boolean result) {
+            return new NicknameResponse(result);
         }
     }
 }
