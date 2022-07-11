@@ -17,4 +17,14 @@ public class UserRequest {
         @NotBlank(message = "accessToken 값은 필수입니다.")
         private String accessToken;
     }
+
+    @Getter
+    @JsonNaming(SnakeCaseStrategy.class)
+    public static class UpdateRequest {
+        @NotBlank(message = "nickname 값은 필수입니다.")
+        private String nickname;
+
+        private String profileImage;
+    }
+
 }

@@ -1,9 +1,8 @@
 package com.ac.moduleapi.controller.auth;
 
-import com.ac.modulecommon.entity.user.User;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -23,8 +22,9 @@ public class AuthDto {
         @NotBlank(message = "accessToken 값은 필수입니다.")
         private String accessToken;
     }
+
     @Getter
-    @Builder
+    @AllArgsConstructor
     @JsonNaming(SnakeCaseStrategy.class)
     public static class AuthResponse {
         //jwt
@@ -32,10 +32,8 @@ public class AuthDto {
 
         //userInfo
 
-        public static AuthResponse of(String apiToken, User user) {
-            return AuthResponse.builder()
-                    .apiToken(apiToken)
-                    .build();
+        public static AuthResponse from(String apiToken) {
+            return new AuthResponse(apiToken);
         }
     }
 }

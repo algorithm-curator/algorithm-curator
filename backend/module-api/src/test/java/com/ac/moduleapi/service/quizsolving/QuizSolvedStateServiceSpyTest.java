@@ -19,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ac.modulecommon.entity.quiz.QuizLevel.SILVER;
+import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_SILVER;
 import static com.ac.modulecommon.entity.quiz.QuizPlatform.BOJ;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,6 +58,7 @@ class QuizSolvedStateServiceSpyTest {
     @BeforeEach
     public void init() {
         mockUser = User.builder().id(1L)
+                                .oauthId(12345L)
                                 .nickname("mock")
                                 .profileImage("mock").
                                 build();
@@ -65,7 +66,7 @@ class QuizSolvedStateServiceSpyTest {
         mockQuiz = Quiz.builder().id(1L)
                                 .title("mockTitle")
                                 .quizUrl("mockUrl")
-                                .level(SILVER)
+                                .level(BOJ_SILVER)
                                 .platform(BOJ).build();
 
         mockSolvedState = QuizSolvedState.builder()
@@ -83,7 +84,7 @@ class QuizSolvedStateServiceSpyTest {
                                             mockQuiz.getId(),
                                             "title1",
                                             "www.naver.com",
-                                            SILVER,
+                BOJ_SILVER,
                                             BOJ);
 
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(dto));
@@ -117,7 +118,7 @@ class QuizSolvedStateServiceSpyTest {
                                             mockQuiz.getId(),
                                             "title1",
                                             "www.naver.com",
-                                            SILVER,
+                BOJ_SILVER,
                                             BOJ);
 
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(dto));

@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartException;
 
 import java.util.Map;
@@ -42,6 +43,15 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<?> handleBadRequestException(Exception e) {
         return createResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * handle kakao login api exception
+     */
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<?> handleHttpClientErrorException(HttpClientErrorException e) {
+        HttpStatus httpStatus = HttpStatus.valueOf(e.getRawStatusCode());
+        return createResponse(e, httpStatus);
     }
 
     /**

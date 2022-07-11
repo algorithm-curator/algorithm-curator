@@ -48,7 +48,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                     JwtAuthenticationToken.of(jwtAuthentication, createAuthorityList(Role.USER.value()));
 
             String apiToken = jwt.createApiToken(user, new String[]{Role.USER.value()});
-            authenticationToken.setDetails(AuthDto.AuthResponse.of(apiToken, user));
+            authenticationToken.setDetails(AuthDto.AuthResponse.from(apiToken));
 
             return authenticationToken;
         } catch (ApiException e) {

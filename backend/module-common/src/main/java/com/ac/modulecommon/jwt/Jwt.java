@@ -57,7 +57,6 @@ public class Jwt {
         builder.withClaim("id", claims.id);
         builder.withClaim("oauthId", claims.oauthId);
         builder.withClaim("nickname", claims.nickname);
-        builder.withClaim("profileImage", claims.profileImage);
         builder.withArrayClaim("roles", claims.roles);
         return builder.sign(algorithm);
     }
@@ -82,7 +81,6 @@ public class Jwt {
         private Long id;
         private Long oauthId;
         private String nickname;
-        private String profileImage;
         private String[] roles;
         private Date iat;
         private Date exp;
@@ -99,10 +97,6 @@ public class Jwt {
             Claim nickname = decodedJWT.getClaim("nickname");
             if (!nickname.isNull())
                 this.nickname = nickname.asString();
-
-            Claim profileImage = decodedJWT.getClaim("profileImage");
-            if (!profileImage.isNull())
-                this.profileImage = profileImage.asString();
 
             Claim roles = decodedJWT.getClaim("roles");
             if (!roles.isNull())

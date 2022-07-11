@@ -17,7 +17,16 @@ import static java.util.stream.Collectors.toMap;
 @AllArgsConstructor
 public enum QuizType {
     DP(0, "Dynamic Programming"),
-    DFS(1, "깊이우선탐색");
+    DFS(1, "깊이우선탐색"),
+    BFS(2,"너비우선탐색"),
+    BINARY_SEARCH(3,"이분탐색"),
+    GRAPH(4,"그래프"),
+    BRUTE_FORCE(5,"완전탐색"),
+    GREEDY(6,"그리디"),
+    DS(7,"자료구조"),
+    SIMULATION(8,"시뮬레이션"),
+    BACKTRACKING(9,"백트래킹")
+    ;
 
     private static final Map<Integer, QuizType> quizTypeMap =
             Stream.of(values()).collect(toMap(QuizType::getCode, value -> value));

@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### PROPERTIES PROTECTION ###
+.env
+/module-api/src/main/resources/aws.properties
