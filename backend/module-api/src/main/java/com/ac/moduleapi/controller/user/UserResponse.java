@@ -18,12 +18,33 @@ public class UserResponse {
     public static class JoinResponse {
 
         private Long id;
-        private Long oauthId;
 
         public static JoinResponse from(User user) {
             return JoinResponse.builder()
                     .id(user.getId())
-                    .oauthId(user.getOauthId())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @JsonNaming(SnakeCaseStrategy.class)
+    public static class GetResponse {
+
+        private String nickname;
+        private String profileImage;
+
+        public static GetResponse from(User user) {
+            return GetResponse.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(null)
+                    .build();
+        }
+
+        public static GetResponse of(User user, String profileUrl) {
+            return GetResponse.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(profileUrl)
                     .build();
         }
     }

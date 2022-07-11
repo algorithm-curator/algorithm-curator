@@ -2,6 +2,7 @@ package com.ac.moduleapi.controller.user;
 
 import com.ac.moduleapi.controller.user.UserRequest.JoinRequest;
 import com.ac.moduleapi.controller.user.UserRequest.UpdateRequest;
+import com.ac.moduleapi.controller.user.UserResponse.GetResponse;
 import com.ac.moduleapi.controller.user.UserResponse.JoinResponse;
 import com.ac.moduleapi.controller.user.UserResponse.NicknameResponse;
 import com.ac.moduleapi.controller.user.UserResponse.UpdateResponse;
@@ -41,6 +42,18 @@ public class UserApiController {
         User user = userService.getUser(userId);
 
         return OK(JoinResponse.from(user));
+    }
+
+    @GetMapping
+    public ApiResult<GetResponse> getUser(@AuthenticationPrincipal JwtAuthentication authentication) {
+        User user = userService.getUser(authentication.getId());
+
+        if (isEmpty(user.getProfileImage())) {
+            return OK(GetResponse.from(user));
+        }
+
+        String profilePresignedUrl = presignerUtils.getProfilePresignedGetUrl(user.getProfileImage());
+        return OK(GetResponse.of(user, profilePresignedUrl));
     }
 
     @PutMapping
