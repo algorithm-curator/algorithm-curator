@@ -60,7 +60,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     Long id = claims.getId();
                     Long oauthId = claims.getOauthId();
                     String nickname = claims.getNickname();
-                    String profileImage = claims.getProfileImage();
 
                     List<GrantedAuthority> authorities = getAuthorities(claims);
 
@@ -70,7 +69,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                 .id(id)
                                 .oauthId(oauthId)
                                 .nickname(nickname)
-                                .profileImage(profileImage)
                                 .build();
 
                         JwtAuthenticationToken authentication = JwtAuthenticationToken.of(principal, authorities);

@@ -18,14 +18,11 @@ public class JwtAuthentication {
 
     private final String nickname;
 
-    private final String profileImage;
-
     public static JwtAuthentication from(User user) {
         return JwtAuthentication.builder()
                 .id(user.getId())
                 .oauthId(user.getOauthId())
                 .nickname(user.getNickname())
-                .profileImage(user.getProfileImage())
                 .build();
     }
 }

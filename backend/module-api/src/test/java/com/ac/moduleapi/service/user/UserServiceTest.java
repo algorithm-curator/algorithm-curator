@@ -3,6 +3,8 @@ package com.ac.moduleapi.service.user;
 import com.ac.modulecommon.entity.user.User;
 import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.user.UserRepository;
+import com.ac.modulecommon.util.UploadUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UploadUtils uploadUtils;
 
     private User mockUser;
 
@@ -140,6 +145,7 @@ class UserServiceTest {
     public void 회원정보_중_닉네임만_수정할_수_있다() {
         //given
         given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(false);
         Long userId = mockUser.getId();
         String newNickname = "new nickname";
 
@@ -149,12 +155,33 @@ class UserServiceTest {
         //then
         assertThat(mockUser.getNickname()).isEqualTo(newNickname);
         verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
+    }
+
+    @Test
+    public void 닉네임만_수정_시_중복된_닉네임이어도_기존의_본인_닉네임이면_예외를_반환하지_않는다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(true);
+        Long userId = mockUser.getId();
+        String userNickname = mockUser.getNickname();
+        String newNickname = userNickname;
+
+        //when
+        userService.update(userId, newNickname);
+
+        //then
+        assertThat(mockUser.getNickname()).isEqualTo(newNickname);
+        verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
     }
 
     @Test
     public void 회원정보_중_닉네임과_프로필_이미지를_수정할_수_있다() {
         //given
         given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(false);
+        given(uploadUtils.isNotImageFile(anyString())).willReturn(false);
         Long userId = mockUser.getId();
         String newNickname = "new nickname";
         String newProfileImage = "new profileImage";
@@ -164,8 +191,49 @@ class UserServiceTest {
 
         //then
         assertThat(mockUser.getNickname()).isEqualTo(newNickname);
-        assertThat(mockUser.getProfileImage()).isEqualTo(newProfileImage);
         verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
+        verify(uploadUtils).isNotImageFile(anyString());
+    }
+
+    @Test
+    public void 닉네임과_이미지_수정_시_중복된_닉네임이어도_기존의_본인_닉네임이면_예외를_반환하지_않는다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(true);
+        given(uploadUtils.isNotImageFile(anyString())).willReturn(false);
+        Long userId = mockUser.getId();
+        String userNickname = mockUser.getNickname();
+        String newNickname = userNickname;
+        String newProfileImage = "new profileImage";
+
+        //when
+        userService.update(userId, newNickname, newProfileImage);
+
+        //then
+        assertThat(mockUser.getNickname()).isEqualTo(newNickname);
+        verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
+        verify(uploadUtils).isNotImageFile(anyString());
+    }
+
+    @Test
+    public void 프로필_이미지_업로드_시_이미지_파일_포맷이_아니면_예외를_반환한다() {
+        //given
+        given(uploadUtils.isNotImageFile(anyString())).willReturn(true);
+        Long userId = mockUser.getId();
+        String userNickname = mockUser.getNickname();
+        String newNickname = userNickname;
+        String newProfileImage = "new profileImage";
+
+        //when
+        Assertions.assertThrows(ApiException.class, () -> userService.update(userId, newNickname, newProfileImage));
+
+        //then
+        assertThat(mockUser.getNickname()).isEqualTo(newNickname);
+        verify(userRepository, never()).findById(anyLong());
+        verify(userRepository, never()).exists(anyString());
+        verify(uploadUtils).isNotImageFile(anyString());
     }
 
     @Test

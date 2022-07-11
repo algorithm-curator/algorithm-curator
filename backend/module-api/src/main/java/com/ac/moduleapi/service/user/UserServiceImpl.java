@@ -3,10 +3,14 @@ package com.ac.moduleapi.service.user;
 import com.ac.modulecommon.entity.user.User;
 import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.user.UserRepository;
+import com.ac.modulecommon.util.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
+import static com.ac.modulecommon.exception.EnumApiException.ILLEGAL_ARGUMENT;
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -17,6 +21,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UploadUtils uploadUtils;
 
     @Override
     @Transactional
@@ -60,6 +65,11 @@ public class UserServiceImpl implements UserService {
         checkArgument(isNotBlank(nickname), "nickname 값은 필수입니다.");
 
         User user = getUser(id);
+
+        if (!isValidNicknameRequest(user,nickname)) {
+            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+        }
+
         user.update(nickname);
         return user.getId();
     }
@@ -70,9 +80,25 @@ public class UserServiceImpl implements UserService {
         checkArgument(isNotBlank(nickname), "nickname 값은 필수입니다.");
         checkArgument(isNotBlank(profileImage), "profileImage 값은 필수입니다.");
 
+        if (uploadUtils.isNotImageFile(profileImage)) {
+            throw new ApiException(ILLEGAL_ARGUMENT, "png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
+        }
+
+        String randomProfileImageUrl = UUID.randomUUID() + profileImage;
+
         User user = getUser(id);
-        user.update(nickname, profileImage);
+
+        if (!isValidNicknameRequest(user,nickname)) {
+            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+        }
+
+        user.update(nickname, randomProfileImageUrl);
         return user.getId();
+    }
+
+    private boolean isValidNicknameRequest(User user, String nickname) {
+        if (isUniqueNickname(nickname)) return true;
+        else return nickname.equals(user.getNickname());
     }
 
     @Override

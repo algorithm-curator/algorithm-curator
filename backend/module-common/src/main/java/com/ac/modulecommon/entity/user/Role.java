@@ -24,6 +24,6 @@ public enum Role {
             }
         }
 
-        throw new ApiException(ILLEGAL_ARGUMENT, Role.class, name);
+        throw new ApiException(ILLEGAL_ARGUMENT, String.format("%s는 올바르지 않은 Role입니다.", name));
     }
 }

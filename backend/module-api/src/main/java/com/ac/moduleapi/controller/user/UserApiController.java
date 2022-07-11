@@ -11,6 +11,7 @@ import com.ac.moduleapi.service.user.UserService;
 import com.ac.modulecommon.controller.ApiResult;
 import com.ac.modulecommon.entity.user.User;
 import com.ac.modulecommon.jwt.JwtAuthentication;
+import com.ac.modulecommon.util.PresignerUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ public class UserApiController {
 
     private final OAuthService oAuthService;
     private final UserService userService;
+    private final PresignerUtils presignerUtils;
 
     @PostMapping("/join")
     public ApiResult<JoinResponse> join(@Valid @RequestBody JoinRequest request) {
@@ -47,11 +49,20 @@ public class UserApiController {
 
         if (isEmpty(request.getProfileImage())) {
             long userId = userService.update(authentication.getId(), request.getNickname());
-            return OK(UpdateResponse.from(userId));
+            User user = userService.getUser(userId);
+
+            if (isEmpty(user.getProfileImage())) {
+                return OK(UpdateResponse.from(user));
+            }
+
+            String profilePresignedUrl = presignerUtils.getProfilePresignedGetUrl(user.getProfileImage());
+            return OK(UpdateResponse.of(user, profilePresignedUrl));
         }
 
         long userId = userService.update(authentication.getId(), request.getNickname(), request.getProfileImage());
-        return OK(UpdateResponse.from(userId));
+        User user = userService.getUser(userId);
+        String profilePresignedUrl = presignerUtils.getProfilePresignedPutUrl(user.getProfileImage());
+        return OK(UpdateResponse.of(user, profilePresignedUrl));
     }
 
     @GetMapping("/nickname")

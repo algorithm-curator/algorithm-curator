@@ -33,10 +33,15 @@ public class UserResponse {
     @JsonNaming(SnakeCaseStrategy.class)
     public static class UpdateResponse {
 
-        private Long id;
+        private String nickname;
+        private String profileImage;
 
-        public static UpdateResponse from(Long id) {
-            return new UpdateResponse(id);
+        public static UpdateResponse from(User user) {
+            return new UpdateResponse(user.getNickname(), null);
+        }
+
+        public static UpdateResponse of(User user, String profileUrl) {
+            return new UpdateResponse(user.getNickname(), profileUrl);
         }
     }
 
