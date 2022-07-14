@@ -6,8 +6,12 @@ import { Container } from "./styles";
 function MyChart() {
 	return (
 		<Container>
-			<ProblemChart />
-			<UntilNowSolveCount />
+			<div style={{ width: "50%" }}>
+				<UntilNowSolveCount />
+			</div>
+			<div style={{ width: "50%" }}>
+				<ProblemChart />
+			</div>
 		</Container>
 	);
 }

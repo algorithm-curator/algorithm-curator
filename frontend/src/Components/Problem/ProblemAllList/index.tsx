@@ -30,9 +30,6 @@ function ProblemAllList() {
 					풀이 완료
 				</Status>
 			</ProblemNav>
-			<hr
-				style={{ border: "0", width: "100%", borderTop: "1px solid black" }}
-			/>
 		</Container>
 	);
 }

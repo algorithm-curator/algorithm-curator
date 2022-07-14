@@ -20,6 +20,8 @@ export const TitleChartWrapper = styled.div`
 export const Title = styled.div`
 	font-size: 2rem;
 	font-weight: 600;
+	padding: 1rem;
+	text-align: left;
 `;
 
 export const ChartLink = styled(Link)`
