@@ -4,10 +4,10 @@ import { Container, Button } from "./styles";
 function LogOn() {
 	return (
 		<Container>
-			<Button>Ranking</Button>
-			<Button>Result</Button>
-			<Button>Problem List</Button>
-			<Button>My Chart</Button>
+			<Button to="/rank">Ranking</Button>
+			<Button to="/problemList">Problem List</Button>
+			<Button to="/mychart">Chart</Button>
+			<Button to="/mypage">My Page</Button>
 		</Container>
 	);
 }

@@ -9,8 +9,8 @@ function Header() {
 		<Container>
 			<HeaderWrapper>
 				<Logo />
-				<LogOff />
-				{/* <LogOn /> */}
+				{/* <LogOff /> */}
+				<LogOn />
 			</HeaderWrapper>
 		</Container>
 	);

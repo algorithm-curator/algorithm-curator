@@ -4,7 +4,6 @@
     BOJ_GOLD(1, "골드"),
     BOJ_PLATINUM(2, "플래티넘"),
 */
---2020년 5월 문제 목록
 insert into quizzes(title,quiz_url,level,platform) values('N과 M(1)','https://www.acmicpc.net/problem/15649',0,0);
 insert into quizzes(title,quiz_url,level,platform) values('N과 M(2)','https://www.acmicpc.net/problem/15650',0,0);
 insert into quizzes(title,quiz_url,level,platform) values('N과 M(3)','https://www.acmicpc.net/problem/15651',0,0);
@@ -194,7 +193,6 @@ insert into quizzes(title,quiz_url,level,platform) values('가장 큰 정사각�
 insert into quizzes(title,quiz_url,level,platform) values('같은 숫자는 싫어','https://school.programmers.co.kr/learn/courses/30/lessons/12906',100,1);
 insert into quizzes(title,quiz_url,level,platform) values('거스름돈','https://school.programmers.co.kr/learn/courses/30/lessons/12907',102,1);
 insert into quizzes(title,quiz_url,level,platform) values('올바른 괄호','https://school.programmers.co.kr/learn/courses/30/lessons/12909',101,1);
-insert into quizzes(title,quiz_url,level,platform) values('직사각형의 넓이','https://school.programmers.co.kr/learn/courses/30/lessons/12974',104,1);
 insert into quizzes(title,quiz_url,level,platform) values('나누어 떨어지는 숫자 배열','https://school.programmers.co.kr/learn/courses/30/lessons/12910',100,1);
 insert into quizzes(title,quiz_url,level,platform) values('다음 큰 숫자','https://school.programmers.co.kr/learn/courses/30/lessons/12911',101,1);
 
