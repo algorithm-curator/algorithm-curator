@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./Styles/style.css";
 
 import Header from "Components/Header";
 import Main from "Pages/Main";
@@ -7,7 +8,7 @@ import ProblemToday from "Pages/ProblemToday";
 import ProblemList from "Pages/ProblemList";
 import Rank from "Pages/Rank";
 import MyChart from "Pages/MyChart";
-import "./Styles/style.css";
+import MyPage from "Pages/MyPage";
 
 function App() {
 	return (
@@ -19,6 +20,7 @@ function App() {
 				<Route path="/problemlist" element={<ProblemList />} />
 				<Route path="/mychart" element={<MyChart />} />
 				<Route path="/rank" element={<Rank />} />
+				<Route path="/mypage" element={<MyPage />} />
 			</Routes>
 		</BrowserRouter>
 	);
