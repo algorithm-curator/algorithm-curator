@@ -64,17 +64,13 @@ public class UserApiController {
             long userId = userService.update(authentication.getId(), request.getNickname());
             User user = userService.getUser(userId);
 
-            if (isEmpty(user.getProfileImage())) {
-                return OK(UpdateResponse.from(user));
-            }
-
-            String profilePresignedUrl = presignerUtils.getProfilePresignedGetUrl(user.getProfileImage());
-            return OK(UpdateResponse.of(user, profilePresignedUrl));
+            return OK(UpdateResponse.from(user));
         }
 
         long userId = userService.update(authentication.getId(), request.getNickname(), request.getProfileImage());
         User user = userService.getUser(userId);
         String profilePresignedUrl = presignerUtils.getProfilePresignedPutUrl(user.getProfileImage());
+
         return OK(UpdateResponse.of(user, profilePresignedUrl));
     }
 

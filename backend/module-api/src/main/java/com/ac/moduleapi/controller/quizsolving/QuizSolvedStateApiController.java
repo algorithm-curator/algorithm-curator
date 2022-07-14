@@ -18,12 +18,12 @@ import java.util.List;
 import static com.ac.modulecommon.controller.ApiResult.OK;
 import static java.util.stream.Collectors.toList;
 
-@RequestMapping("/api/quiz")
+@RequestMapping("/api/problems")
 @RequiredArgsConstructor
 @RestController
 public class QuizSolvedStateApiController {
 
-    private static final int MAX_UNSOLVED_COUNT = 10;
+    private static final int MAX_UNSOLVED_COUNT = 20;
     private static final int PICK_COUNT = 3;
 
     private final QuizSolvedStateService quizSolvedStateService;
@@ -34,7 +34,7 @@ public class QuizSolvedStateApiController {
         int unsolvedQuizSize = quizSolvedStateService.getUnsolvedQuizSize(authentication.getId());
 
         if (unsolvedQuizSize > MAX_UNSOLVED_COUNT) {
-            throw new IllegalStateException("해결 못한 문제가 10문제를 초과하는 경우 더 이상 문제를 뽑을 수 없습니다.");
+            throw new IllegalStateException("해결 못한 문제가 20문제를 초과하는 경우 더 이상 문제를 뽑을 수 없습니다.");
         }
 
         return OK(quizSolvedStateService.createRandomQuizzes(authentication.getId(), PICK_COUNT)
@@ -71,11 +71,24 @@ public class QuizSolvedStateApiController {
      */
     @PutMapping
     public ApiResult<Void> updateQuizzes(@AuthenticationPrincipal JwtAuthentication authentication,
-                                      @Valid @RequestBody UpdateRequest request) {
+                                         @Valid @RequestBody UpdateRequest request) {
 
-        quizSolvedStateService.update(authentication.getId(),
-                                        request.getIdList(),
-                                        SolvedState.from(request.getState()));
+        request.getProblems()
+                .forEach(quizUpdateDto -> quizSolvedStateService.update(quizUpdateDto.getId(),
+                                                                        SolvedState.from(quizUpdateDto.getState()),
+                                                                        authentication.getId()));
+
+        return OK();
+    }
+
+    /**
+     * 문제 '안 뽑음' 상태로 변경 (삭제)
+     */
+    @DeleteMapping("/{id}")
+    public ApiResult<Void> deleteQuiz(@PathVariable Long id,
+                                      @AuthenticationPrincipal JwtAuthentication authentication) {
+
+        quizSolvedStateService.delete(id, authentication.getId());
 
         return OK();
     }

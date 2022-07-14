@@ -38,15 +38,10 @@ public interface QuizSolvedStateService {
     /**
      * 문제의 상태를 변경할 수 있다
      */
-    void update(Long id, SolvedState solvedState);
+    void update(Long id, SolvedState solvedState, Long userId);
 
     /**
-     * 문제의 상태를 변경할 수 있다
+     * 해당 문제를 '안 뽑음' 상태로 변경한다.
      */
-    void update(Long userId, List<Long> idList, SolvedState solvedState);
-
-    /**
-     * 해당 문제들을 '안 뽑음' 상태로 변경한다.
-     */
-    void delete(List<Long> idList);
+    void delete(Long id, Long userId);
 }

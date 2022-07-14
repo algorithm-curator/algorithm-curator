@@ -25,8 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * 핵심 로직인 createRandomQuizzes 에서 실제 데이터가 들어가고, 상태가 변경되는지 확인하기 위해
@@ -124,7 +123,7 @@ class QuizSolvedStateServiceSpyTest {
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(dto));
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
-        given(quizSolvedStateRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
         int count = 1;
 
@@ -146,5 +145,6 @@ class QuizSolvedStateServiceSpyTest {
         verify(userService).getUser(anyLong());
         verify(quizService, never()).getQuiz(any());
         verify(quizSolvedStateRepository, never()).save(any());
+        verify(quizSolvedStateRepository, times(3)).findOne(anyLong());
     }
 }

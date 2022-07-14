@@ -20,7 +20,7 @@ public class QuizSolvedStateDto {
     @JsonNaming(SnakeCaseStrategy.class)
     public static class PickResponse {
 
-        private Long quizSolvedStateId;
+        private Long id;
         private String title;
         private String quizUrl;
         private String quizLevel;
@@ -28,7 +28,7 @@ public class QuizSolvedStateDto {
 
         public static PickResponse from(QuizQueryDto quizQueryDto) {
             return PickResponse.builder()
-                    .quizSolvedStateId(quizQueryDto.getQuizSolvedStateId())
+                    .id(quizQueryDto.getQuizSolvedStateId())
                     .title(quizQueryDto.getTitle())
                     .quizUrl(quizQueryDto.getQuizUrl())
                     .quizLevel(quizQueryDto.getQuizLevel().getState())
@@ -42,7 +42,7 @@ public class QuizSolvedStateDto {
     @JsonNaming(SnakeCaseStrategy.class)
     public static class GetResponse {
 
-        private Long quizSolvedStateId;
+        private Long id;
         private String title;
         private String quizUrl;
         private String quizLevel;
@@ -50,7 +50,7 @@ public class QuizSolvedStateDto {
 
         public static GetResponse from(QuizSolvedState quizSolvedState) {
             return GetResponse.builder()
-                    .quizSolvedStateId(quizSolvedState.getId())
+                    .id(quizSolvedState.getId())
                     .title(quizSolvedState.getQuiz().getTitle())
                     .quizUrl(quizSolvedState.getQuiz().getQuizUrl())
                     .quizLevel(quizSolvedState.getQuiz().getLevel().getState())
@@ -64,11 +64,19 @@ public class QuizSolvedStateDto {
     public static class UpdateRequest {
         @NotNull(message = "idList 값은 필수입니다.")
         @Size(max = 10)
-        private List<Long> idList;
+        private List<QuizUpdateDto> problems;
 
-        @Min(value = 1)
-        @Max(value = 2)
-        @NotNull(message = "state 값은 필수입니다.")
-        private Integer state;
+        @Getter
+        @JsonNaming(SnakeCaseStrategy.class)
+        public static class QuizUpdateDto {
+
+            @NotNull(message = "id 값은 필수입니다.")
+            private Long id;
+
+            @Min(value = 1)
+            @Max(value = 2)
+            @NotNull(message = "state 값은 필수입니다.")
+            private Integer state;
+        }
     }
 }
