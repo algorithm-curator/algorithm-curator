@@ -49,7 +49,7 @@ spring:
       on-profile: dev
   sql:
     init:
-      mode: never # schema.sql ?? ??
+      mode: never
 
 ---
 spring:

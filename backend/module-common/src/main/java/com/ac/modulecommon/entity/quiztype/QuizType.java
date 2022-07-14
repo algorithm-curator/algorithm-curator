@@ -25,8 +25,15 @@ public enum QuizType {
     GREEDY(6,"그리디"),
     DS(7,"자료구조"),
     SIMULATION(8,"시뮬레이션"),
-    BACKTRACKING(9,"백트래킹")
-    ;
+    BACKTRACKING(9,"백트래킹"),
+    BIT_MASKING(10,"비트마스킹"),
+    MATH(11,"수학"),
+    PREFIX_SUM(12,"누적합"),
+    DIJKSTRA(13,"다익스트라"),
+    FLOYD(14,"플로이드 와샬"),
+    TOPOLOGICAL_SORT(15,"위상 정렬"),
+    SORT(16,"정렬"),
+    STRING(17,"문자열");
 
     private static final Map<Integer, QuizType> quizTypeMap =
             Stream.of(values()).collect(toMap(QuizType::getCode, value -> value));
