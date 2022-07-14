@@ -6,6 +6,7 @@ export const Container = styled.table`
 	margin: 7rem auto;
 	background-color: #e0e0e0;
 	width: 90%;
+	max-width: 800px;
 	border-radius: 1rem;
 	padding: 2rem;
 `;
@@ -37,7 +38,7 @@ export const ProfileImage = styled.div<{ srcUrl: any }>`
 export const ProfileEditSubmit = styled.button`
 	margin-top: 3rem;
 	border: none;
-	background-color: rgba(38, 36, 158, 0.5);
+	background-color: rgba(0, 0, 0, 0.15);
 	font-size: 1.2rem;
 	font-weight: 500;
 	width: fit-content;
