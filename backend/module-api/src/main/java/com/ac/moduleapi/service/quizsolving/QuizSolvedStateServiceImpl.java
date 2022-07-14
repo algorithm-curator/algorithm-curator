@@ -81,10 +81,17 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     }
 
     @Override
+    public List<QuizSolvedState> getQuizSolvedStates(Long userId, Pageable pageable) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.findAll(userId, null, pageable);
+    }
+
+    @Override
     public List<QuizSolvedState> getQuizSolvedStates(Long userId, SolvedState solvedState, Pageable pageable) {
         checkArgument(userId != null, "userId 값은 필수입니다.");
-        checkArgument(solvedState == null ||
-                (!solvedState.equals(NOT_PICKED)), "solvedState는 옵션이 없거나, 풀이 미완료/완료 값이어야 합니다.");
+        checkArgument(solvedState != null, "solvedState 값은 필수입니다.");
+        checkArgument(!solvedState.equals(NOT_PICKED), "solvedState는 풀이 미완료/완료 값이어야 합니다.");
 
         return quizSolvedStateRepository.findAll(userId, solvedState, pageable);
     }
@@ -93,8 +100,16 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     public QuizSolvedState getQuizSolvedState(Long id) {
         checkArgument(id != null, "id 값은 필수입니다.");
 
-        return quizSolvedStateRepository.findById(id)
+        //FIXME
+        return quizSolvedStateRepository.findOne(id)
                 .orElseThrow(() -> new RuntimeException("FIXME"));
+    }
+
+    @Override
+    public int getUnsolvedQuizSize(Long userId) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.countAllBySolvedState(userId, UNSOLVED);
     }
 
     @Override
@@ -105,6 +120,21 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
 
         QuizSolvedState quizSolvedState = getQuizSolvedState(id);
         quizSolvedState.update(solvedState);
+    }
+
+    @Override
+    @Transactional
+    public void update(Long userId, List<Long> idList, SolvedState solvedState) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+        checkArgument(isNotEmpty(idList), "idList 값은 필수입니다.");
+        checkArgument(idList.size() <= 10, "idList 크기는 최대 10입니다.");
+        checkArgument(solvedState != null, "solvedState 값은 필수입니다.");
+        checkArgument(!solvedState.equals(NOT_PICKED), "안뽑음 상태로는 변경할 수 없습니다. 삭제 API를 이용하세요.");
+
+        idList.stream()
+                .map(this::getQuizSolvedState)
+                .takeWhile(quizSolvedState -> quizSolvedState.getUser().getId().equals(userId))
+                .forEach(quizSolvedState -> quizSolvedState.update(solvedState));
     }
 
     @Override
