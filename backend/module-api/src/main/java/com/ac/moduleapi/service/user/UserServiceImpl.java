@@ -5,13 +5,16 @@ import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.user.UserRepository;
 import com.ac.modulecommon.util.UploadUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Transactional(readOnly = true)
@@ -22,20 +25,21 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UploadUtils uploadUtils;
 
+    @Async
     @Override
     @Transactional
-    public Long create(Long oauthId) {
+    public CompletableFuture<Long> create(Long oauthId) {
         checkArgument(oauthId != null, "oauthId 값은 필수입니다.");
 
         if (userRepository.existsByOAuth(oauthId)) {
-            return getUserByOauthId(oauthId).getId();
+            return completedFuture(getUserByOauthId(oauthId).getId());
         }
 
         User user = User.builder()
                         .oauthId(oauthId)
                         .build();
 
-        return userRepository.save(user).getId();
+        return completedFuture(userRepository.save(user).getId());
     }
 
     @Override

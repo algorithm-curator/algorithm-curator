@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +46,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void oauthId가_주어지면_회원가입을_할_수_있다() {
+    public void oauthId가_주어지면_회원가입을_할_수_있다() throws ExecutionException, InterruptedException {
         //given
         Long mockUserId = 1L;
         Long mockOauthId = 12345L;
@@ -56,7 +57,7 @@ class UserServiceTest {
 
         //when
         Long oauthId = 12345L;
-        Long userId = userService.create(oauthId);
+        Long userId = userService.create(oauthId).get();
 
         //then
         verify(userRepository).save(any());
@@ -68,7 +69,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void oauthId가_이미_존재하는_회원은_기존에_가입된_정보를_반환한다() {
+    public void oauthId가_이미_존재하는_회원은_기존에_가입된_정보를_반환한다() throws ExecutionException, InterruptedException {
         //given
         Long mockUserId = 1L;
         Long mockOauthId = 12345L;
@@ -79,7 +80,7 @@ class UserServiceTest {
 
         //when
         Long oauthId = 12345L;
-        Long userId = userService.create(oauthId);
+        Long userId = userService.create(oauthId).get();
 
         //then
         verify(userRepository, never()).save(any());

@@ -7,12 +7,13 @@ import com.ac.modulecommon.repository.quiz.query.QuizQueryDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface QuizSolvedStateService {
     /**
      * 문제를 랜덤으로 뽑을 수 있다.
      */
-    List<QuizQueryDto> createRandomQuizzes(Long userId, int createCount);
+    CompletableFuture<List<QuizQueryDto>> createRandomQuizzes(Long userId, int createCount);
 
     /**
      * insert

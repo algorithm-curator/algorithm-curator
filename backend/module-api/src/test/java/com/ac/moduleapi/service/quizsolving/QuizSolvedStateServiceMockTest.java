@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_GOLD;
 import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_SILVER;
@@ -82,7 +83,7 @@ class QuizSolvedStateServiceMockTest {
     }
 
     @Test
-    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_insert_case() {
+    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_insert_case() throws ExecutionException, InterruptedException {
         //given
         int loopSize = 100;
         List<QuizQueryDto> dtoList = new ArrayList<>();
@@ -100,7 +101,7 @@ class QuizSolvedStateServiceMockTest {
         int count = 3;
 
         //when
-        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
+        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count).get();
 
         //then
         assertThat(randomQuizzes.size()).isEqualTo(count);
@@ -112,7 +113,7 @@ class QuizSolvedStateServiceMockTest {
     }
 
     @Test
-    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_update_case() {
+    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_update_case() throws ExecutionException, InterruptedException {
         //given
         int loopSize = 100;
         List<QuizQueryDto> dtoList = new ArrayList<>();
@@ -129,7 +130,7 @@ class QuizSolvedStateServiceMockTest {
         int count = 3;
 
         //when
-        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
+        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count).get();
 
         //then
         assertThat(randomQuizzes.size()).isEqualTo(count);

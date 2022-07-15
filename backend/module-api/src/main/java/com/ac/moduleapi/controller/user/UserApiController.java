@@ -10,20 +10,22 @@ import com.ac.moduleapi.security.oauth.OAuthDto;
 import com.ac.moduleapi.security.oauth.OAuthService;
 import com.ac.moduleapi.service.user.UserService;
 import com.ac.modulecommon.controller.ApiResult;
+import com.ac.modulecommon.controller.ErrorResponseEntity;
 import com.ac.modulecommon.entity.user.User;
 import com.ac.modulecommon.jwt.JwtAuthentication;
 import com.ac.modulecommon.util.PresignerUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.concurrent.CompletableFuture;
 
 import static com.ac.modulecommon.controller.ApiResult.OK;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-@Slf4j
 @RequestMapping("/api/users")
 @RestController
 @RequiredArgsConstructor
@@ -33,15 +35,22 @@ public class UserApiController {
     private final UserService userService;
     private final PresignerUtils presignerUtils;
 
+    /**
+     * return value: ApiResult<JoinResponse>
+     */
     @PostMapping("/join")
-    public ApiResult<JoinResponse> join(@Valid @RequestBody JoinRequest request) {
+    public CompletableFuture<ResponseEntity<ApiResult<?>>> join(@Valid @RequestBody JoinRequest request) {
         String accessToken = request.getAccessToken();
         OAuthDto.LoginResponse userInfo = oAuthService.getUserInfo(OAuthDto.LoginRequest.from(accessToken));
 
-        Long userId = userService.create(userInfo.getId());
-        User user = userService.getUser(userId);
+        return userService.create(userInfo.getId()).handle((userId, throwable) -> {
+            if (userId != null) {
+                User user = userService.getUser(userId);
+                return new ResponseEntity<>(OK(JoinResponse.from(user)), HttpStatus.OK);
+            }
 
-        return OK(JoinResponse.from(user));
+            return ErrorResponseEntity.from(throwable, true);
+        });
     }
 
     @GetMapping

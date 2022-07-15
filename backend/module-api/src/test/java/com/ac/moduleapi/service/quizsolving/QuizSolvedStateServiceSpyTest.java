@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.ac.modulecommon.entity.quiz.QuizLevel.BOJ_SILVER;
 import static com.ac.modulecommon.entity.quiz.QuizPlatform.BOJ;
@@ -111,7 +112,7 @@ class QuizSolvedStateServiceSpyTest {
 //    }
 
     @Test
-    public void quizSolvedStateId가_이미_있던_NOT_PICKED_상태의_데이터는_UNSOLVED_상태로_변경된다() {
+    public void quizSolvedStateId가_이미_있던_NOT_PICKED_상태의_데이터는_UNSOLVED_상태로_변경된다() throws ExecutionException, InterruptedException {
         //given
         QuizQueryDto dto = new QuizQueryDto(mockSolvedState.getId(),
                                             mockQuiz.getId(),
@@ -131,7 +132,7 @@ class QuizSolvedStateServiceSpyTest {
         assertThat(beforeSolvedState.getSolvedState()).isEqualTo(SolvedState.NOT_PICKED);
 
         //when
-        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
+        List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count).get();
         Long id = randomQuizzes.get(0).getQuizSolvedStateId();
 
         //then
