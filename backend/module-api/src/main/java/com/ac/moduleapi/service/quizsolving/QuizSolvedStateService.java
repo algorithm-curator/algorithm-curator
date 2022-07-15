@@ -28,6 +28,8 @@ public interface QuizSolvedStateService {
 
     QuizSolvedState getQuizSolvedState(Long id);
 
+    int getSolvingCount(Long userId);
+
     /**
      * 문제의 상태를 변경할 수 있다
      */

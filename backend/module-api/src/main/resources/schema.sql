@@ -53,8 +53,8 @@ CREATE TABLE quiz_logs
     user_id             bigint          DEFAULT NULL COMMENT 'user id',
     quiz_id             bigint          DEFAULT NULL COMMENT 'quiz id',
     PRIMARY KEY (id),
-    KEY quiz_log_idx_user (user_id),
     KEY quiz_log_idx_quiz (quiz_id),
+    KEY quiz_log_idx_user_created_at (user_id, created_at),
     CONSTRAINT fk_quiz_log_to_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_quiz_log_to_quiz FOREIGN KEY (quiz_id) REFERENCES quizzes (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) COMMENT '문제 풀이 상태 로그 테이블';

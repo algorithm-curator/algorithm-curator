@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.ac.modulecommon.entity.quizsolving.SolvedState.NOT_PICKED;
-import static com.ac.modulecommon.entity.quizsolving.SolvedState.UNSOLVED;
+import static com.ac.modulecommon.entity.quizsolving.SolvedState.*;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
@@ -95,6 +94,13 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
 
         return quizSolvedStateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("FIXME"));
+    }
+
+    @Override
+    public int getSolvingCount(Long userId) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.count(userId, SOLVED);
     }
 
     @Override

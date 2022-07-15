@@ -20,4 +20,9 @@ public class QuizServiceImpl implements QuizService {
         checkArgument(id != null, "id 값은 필수입니다.");
         return quizRepository.findById(id).orElseThrow(() -> new RuntimeException("FIXME"));
     }
+
+    @Override
+    public Long count() {
+        return quizRepository.count();
+    }
 }

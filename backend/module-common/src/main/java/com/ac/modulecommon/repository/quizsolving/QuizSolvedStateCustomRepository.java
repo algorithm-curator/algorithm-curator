@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface QuizSolvedStateCustomRepository {
     List<QuizSolvedState> findAll(Long userId, SolvedState solvedState, Pageable pageable);
+
+    int count(Long userId, SolvedState solvedState);
 }

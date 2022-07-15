@@ -34,6 +34,19 @@ public class QuizSolvedStateCustomRepositoryImpl implements QuizSolvedStateCusto
                 .fetch();
     }
 
+    @Override
+    public int count(Long userId, SolvedState solvedState) {
+        List<QuizSolvedState> result = jpaQueryFactory
+                .selectFrom(quizSolvedState)
+                .where(
+                    quizSolvedState.user.id.eq(userId),
+                    solvedStateEq(solvedState)
+                )
+                .fetch();
+
+        return result.size();
+    }
+
     private BooleanExpression solvedStateEq(SolvedState solvedState) {
         if (solvedState == null) {
             return null;
