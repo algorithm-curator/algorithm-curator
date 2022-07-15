@@ -6,9 +6,11 @@ import com.ac.modulecommon.entity.quiz.Quiz;
 import com.ac.modulecommon.entity.quizsolving.QuizSolvedState;
 import com.ac.modulecommon.entity.quizsolving.SolvedState;
 import com.ac.modulecommon.entity.user.User;
+import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryDto;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryRepository;
 import com.ac.modulecommon.repository.quizsolving.QuizSolvedStateRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 /**
@@ -123,7 +124,7 @@ class QuizSolvedStateServiceMockTest {
 
         given(quizQueryRepository.findAll(any(), any())).willReturn(dtoList);
         given(userService.getUser(anyLong())).willReturn(mockUser);
-        given(quizSolvedStateRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
         int count = 5;
 
@@ -136,7 +137,7 @@ class QuizSolvedStateServiceMockTest {
         verify(userService).getUser(anyLong());
         verify(quizService, never()).getQuiz(any());
         verify(quizSolvedStateRepository, never()).save(any());
-        verify(quizSolvedStateRepository, times(count)).findById(anyLong());
+        verify(quizSolvedStateRepository, times(count)).findOne(anyLong());
     }
 
     @Test
@@ -157,7 +158,7 @@ class QuizSolvedStateServiceMockTest {
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
-        given(quizSolvedStateRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
         int count = 5;
 
@@ -169,41 +170,86 @@ class QuizSolvedStateServiceMockTest {
         verify(userService).getUser(anyLong());
         verify(quizService, times(2)).getQuiz(any());
         verify(quizSolvedStateRepository, times(2)).save(any());
-        verify(quizSolvedStateRepository, times(3)).findById(anyLong());
+        verify(quizSolvedStateRepository, times(3)).findOne(anyLong());
     }
 
     @Test
     public void 문제_상태를_변경할_수_있다() {
         //given
-        given(quizSolvedStateRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
         //초기 상태: NOT_PICKED
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
         SolvedState newState = SolvedState.SOLVED;
 
         //when
-        quizSolvedStateService.update(mockSolvedState.getId(), newState);
+        quizSolvedStateService.update(mockSolvedState.getId(), newState, mockUser.getId());
 
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(newState);
-        verify(quizSolvedStateRepository).findById(anyLong());
+        verify(quizSolvedStateRepository).findOne(anyLong());
     }
 
     @Test
-    public void 주어진_문제들을_안뽑음_상태로_변경_한다() {
+    public void 내가_뽑은_문제가_아니면_문제_상태를_변경할_수_없다() {
         //given
-        given(quizSolvedStateRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        User otherUser = User.builder().id(2L)
+                .oauthId(6789L)
+                .nickname("mock")
+                .profileImage("mock")
+                .build();
 
-        List<Long> mockIds = List.of(mockSolvedState.getId(), mockSolvedState.getId(), mockSolvedState.getId());
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+
+        //초기 상태: NOT_PICKED
+        assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
+        SolvedState newState = SolvedState.SOLVED;
+
+        //when
+        Assertions.assertThrows(ApiException.class,
+            () -> quizSolvedStateService.update(mockSolvedState.getId(), newState, otherUser.getId()));
+
+        //then
+        assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
+        verify(quizSolvedStateRepository).findOne(anyLong());
+    }
+
+    @Test
+    public void 주어진_문제를_안뽑음_상태로_변경할_수_있다() {
+        //given
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
         //초기 상태: NOT_PICKED
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
 
         //when
-        quizSolvedStateService.delete(mockIds);
+        quizSolvedStateService.delete(mockSolvedState.getId(), mockUser.getId());
 
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.NOT_PICKED);
-        verify(quizSolvedStateRepository, times(mockIds.size())).findById(anyLong());
+        verify(quizSolvedStateRepository).findOne(anyLong());
+    }
+
+    @Test
+    public void 내가_뽑은_문제가_아니면_안뽑음_상태로_변경할_수_없다() {
+        //given
+        User otherUser = User.builder().id(2L)
+                .oauthId(6789L)
+                .nickname("mock")
+                .profileImage("mock")
+                .build();
+
+        given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+
+        //초기 상태: NOT_PICKED
+        assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
+
+        //when
+        Assertions.assertThrows(ApiException.class,
+                () -> quizSolvedStateService.delete(mockSolvedState.getId(), otherUser.getId()));
+
+        //then
+        assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.UNSOLVED);
+        verify(quizSolvedStateRepository).findOne(anyLong());
     }
 }

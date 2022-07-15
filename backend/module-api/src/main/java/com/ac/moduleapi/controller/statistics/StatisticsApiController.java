@@ -42,7 +42,7 @@ public class StatisticsApiController {
 
     @GetMapping("/solved-rate")
     public ApiResult<SolvedRateResponse> getSolvedRate(@AuthenticationPrincipal JwtAuthentication authentication) {
-        int solvingCount = quizSolvedStateService.getSolvingCount(authentication.getId());
+        int solvingCount = quizSolvedStateService.getSolvedQuizSize(authentication.getId());
         Long totalCount = quizService.count();
 
         return OK(SolvedRateResponse.of(solvingCount, totalCount));
