@@ -42,7 +42,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     @Transactional
     public List<QuizQueryDto> createRandomQuizzes(Long userId, int createCount) {
         checkArgument(userId != null, "userId 값은 필수입니다.");
-        checkArgument(0 <= createCount && createCount <= 5, "count 값은 0~5 입니다.");
+        checkArgument(0 < createCount && createCount <= 3, "count 값은 1~3 입니다.");
 
         List<QuizQueryDto> candidates = quizQueryRepository.findAll(userId, PageRequest.of(0, QUIZ_SEARCH_SIZE));
         List<QuizQueryDto> modifiableCandidates = new ArrayList<>(candidates);

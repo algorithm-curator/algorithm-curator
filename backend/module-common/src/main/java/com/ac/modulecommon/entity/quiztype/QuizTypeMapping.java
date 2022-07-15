@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -27,6 +29,9 @@ public class QuizTypeMapping extends AuditingCreateUpdateEntity {
 
     @Builder
     private QuizTypeMapping(Long id, Quiz quiz, QuizType quizType) {
+        checkArgument(quizType != null, "quizType 값은 필수입니다.");
+        checkArgument(quiz != null, "quiz 값은 필수입니다.");
+
         this.id = id;
         this.quiz = quiz;
         this.quizType = quizType;

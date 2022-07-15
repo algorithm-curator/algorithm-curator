@@ -39,8 +39,6 @@ public class AuthApiController {
 
         AuthDto.AuthResponse response = (AuthDto.AuthResponse)authenticate.getDetails();
 
-        //TODO: presignedUrl 적용해서 return 하기
-
         return OK(response);
     }
 

@@ -97,7 +97,7 @@ class QuizSolvedStateServiceMockTest {
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
 
-        int count = 5;
+        int count = 3;
 
         //when
         List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
@@ -126,7 +126,7 @@ class QuizSolvedStateServiceMockTest {
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
-        int count = 5;
+        int count = 3;
 
         //when
         List<QuizQueryDto> randomQuizzes = quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
@@ -146,21 +146,17 @@ class QuizSolvedStateServiceMockTest {
         QuizQueryDto nullDto1 = new QuizQueryDto(null, 1L, "title1", "www.naver.com", BOJ_SILVER, BOJ);
         QuizQueryDto notNullDto1 = new QuizQueryDto(1L, 1L, "title2", "www.naver.com", BOJ_GOLD, PG);
         QuizQueryDto notNullDto2 = new QuizQueryDto(2L, 1L, "title3", "www.naver.com", BOJ_GOLD, BOJ);
-        QuizQueryDto notNullDto3 = new QuizQueryDto(3L, 1L, "title4", "www.naver.com", BOJ_SILVER, PG);
-        QuizQueryDto nullDto2 = new QuizQueryDto(null, 1L, "title5", "www.naver.com", BOJ_GOLD, BOJ);
 
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(nullDto1,
                                                                             notNullDto1,
-                                                                            notNullDto2,
-                                                                            notNullDto3,
-                                                                            nullDto2));
+                                                                            notNullDto2));
 
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
 
-        int count = 5;
+        int count = 3;
 
         //when
         quizSolvedStateService.createRandomQuizzes(mockUser.getId(), count);
@@ -168,9 +164,9 @@ class QuizSolvedStateServiceMockTest {
         //then
         verify(quizQueryRepository).findAll(any(), any());
         verify(userService).getUser(anyLong());
-        verify(quizService, times(2)).getQuiz(any());
-        verify(quizSolvedStateRepository, times(2)).save(any());
-        verify(quizSolvedStateRepository, times(3)).findOne(anyLong());
+        verify(quizService, times(1)).getQuiz(any());
+        verify(quizSolvedStateRepository, times(1)).save(any());
+        verify(quizSolvedStateRepository, times(2)).findOne(anyLong());
     }
 
     @Test

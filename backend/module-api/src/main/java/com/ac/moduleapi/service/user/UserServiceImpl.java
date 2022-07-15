@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.ac.modulecommon.exception.EnumApiException.ILLEGAL_ARGUMENT;
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
 
         if (!isValidNicknameRequest(user,nickname)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
 
         user.update(nickname);
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
         checkArgument(isNotBlank(profileImage), "profileImage 값은 필수입니다.");
 
         if (uploadUtils.isNotImageFile(profileImage)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
+            throw new IllegalArgumentException("png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
         }
 
         String randomProfileImageUrl = UUID.randomUUID() + profileImage;
@@ -89,7 +88,7 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
 
         if (!isValidNicknameRequest(user,nickname)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
 
         user.update(nickname, randomProfileImageUrl);

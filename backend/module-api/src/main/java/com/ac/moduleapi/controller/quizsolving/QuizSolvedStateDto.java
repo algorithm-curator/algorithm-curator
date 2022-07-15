@@ -15,8 +15,8 @@ import java.util.List;
 
 public class QuizSolvedStateDto {
 
-    @Builder
     @Getter
+    @Builder
     @JsonNaming(SnakeCaseStrategy.class)
     public static class PickResponse {
 
@@ -37,8 +37,8 @@ public class QuizSolvedStateDto {
         }
     }
 
-    @Builder
     @Getter
+    @Builder
     @JsonNaming(SnakeCaseStrategy.class)
     public static class GetResponse {
 

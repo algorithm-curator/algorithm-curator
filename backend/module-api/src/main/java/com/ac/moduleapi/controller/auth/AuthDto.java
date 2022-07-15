@@ -30,8 +30,6 @@ public class AuthDto {
         //jwt
         private String apiToken;
 
-        //userInfo
-
         public static AuthResponse from(String apiToken) {
             return new AuthResponse(apiToken);
         }
