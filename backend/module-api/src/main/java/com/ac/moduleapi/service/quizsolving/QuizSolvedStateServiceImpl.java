@@ -6,6 +6,7 @@ import com.ac.modulecommon.entity.quiz.Quiz;
 import com.ac.modulecommon.entity.quizsolving.QuizSolvedState;
 import com.ac.modulecommon.entity.quizsolving.SolvedState;
 import com.ac.modulecommon.entity.user.User;
+import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryDto;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryRepository;
 import com.ac.modulecommon.repository.quizsolving.QuizSolvedStateRepository;
@@ -21,9 +22,10 @@ import java.util.List;
 
 import static com.ac.modulecommon.entity.quizsolving.SolvedState.NOT_PICKED;
 import static com.ac.modulecommon.entity.quizsolving.SolvedState.UNSOLVED;
+import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
+import static com.ac.modulecommon.exception.EnumApiException.UNAUTHORIZED;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
                 Long quizSolvedStateId = create(user, quiz.getQuizId());
                 return QuizQueryDto.of(quizSolvedStateId, quiz);
             } else {
-                update(quiz.getQuizSolvedStateId(), UNSOLVED);
+                update(quiz.getQuizSolvedStateId(), UNSOLVED, user.getId());
                 return quiz;
             }
         }).collect(toList());
@@ -81,10 +83,17 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     }
 
     @Override
+    public List<QuizSolvedState> getQuizSolvedStates(Long userId, Pageable pageable) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.findAll(userId, null, pageable);
+    }
+
+    @Override
     public List<QuizSolvedState> getQuizSolvedStates(Long userId, SolvedState solvedState, Pageable pageable) {
         checkArgument(userId != null, "userId 값은 필수입니다.");
-        checkArgument(solvedState == null ||
-                (!solvedState.equals(NOT_PICKED)), "solvedState는 옵션이 없거나, 풀이 미완료/완료 값이어야 합니다.");
+        checkArgument(solvedState != null, "solvedState 값은 필수입니다.");
+        checkArgument(!solvedState.equals(NOT_PICKED), "solvedState는 풀이 미완료/완료 값이어야 합니다.");
 
         return quizSolvedStateRepository.findAll(userId, solvedState, pageable);
     }
@@ -93,25 +102,50 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     public QuizSolvedState getQuizSolvedState(Long id) {
         checkArgument(id != null, "id 값은 필수입니다.");
 
-        return quizSolvedStateRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("FIXME"));
+        return quizSolvedStateRepository.findOne(id)
+                .orElseThrow(() -> new ApiException(NOT_FOUND,
+                                                    QuizSolvedState.class,
+                                                    String.format("id = %s", id)));
+    }
+
+    @Override
+    public int getUnsolvedQuizSize(Long userId) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.countAllBySolvedState(userId, UNSOLVED);
     }
 
     @Override
     @Transactional
-    public void update(Long id, SolvedState solvedState) {
-        checkArgument(id != null, "id 값은 필수입니다.");
+    public void update(Long id, SolvedState solvedState, Long userId) {
         checkArgument(solvedState != null, "solvedState 값은 필수입니다.");
+        checkArgument(!solvedState.equals(NOT_PICKED), "안뽑음 상태로는 변경할 수 없습니다. 삭제 API를 이용하세요.");
+        checkArgument(userId != null, "userId 값은 필수입니다.");
 
         QuizSolvedState quizSolvedState = getQuizSolvedState(id);
+
+        if (!isOwner(quizSolvedState, userId)) {
+            throw new ApiException(UNAUTHORIZED, "본인이 뽑은 문제만 상태를 변경할 수 있습니다.");
+        }
+
         quizSolvedState.update(solvedState);
     }
 
     @Override
     @Transactional
-    public void delete(List<Long> idList) {
-        checkArgument(isNotEmpty(idList), "idList 값은 필수입니다.");
+    public void delete(Long id, Long userId) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
 
-        idList.forEach(id -> update(id, NOT_PICKED));
+        QuizSolvedState quizSolvedState = getQuizSolvedState(id);
+
+        if (!isOwner(quizSolvedState, userId)) {
+            throw new ApiException(UNAUTHORIZED, "본인이 뽑은 문제만 삭제할 수 있습니다.");
+        }
+
+        quizSolvedState.update(NOT_PICKED);
+    }
+
+    private boolean isOwner(QuizSolvedState quizSolvedState, Long userId) {
+        return quizSolvedState.getUser().getId().equals(userId);
     }
 }
