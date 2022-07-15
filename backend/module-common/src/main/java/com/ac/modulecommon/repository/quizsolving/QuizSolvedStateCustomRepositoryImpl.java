@@ -49,13 +49,12 @@ public class QuizSolvedStateCustomRepositoryImpl implements QuizSolvedStateCusto
     }
 
     @Override
-    public int countAllBySolvedState(Long userId, SolvedState solvedState) {
+    public int countBySolvedState(Long userId, SolvedState solvedState) {
         return jpaQueryFactory
                 .selectFrom(quizSolvedState)
-                    .join(quizSolvedState.user, user).fetchJoin()
                 .where(
                     quizSolvedState.user.id.eq(userId),
-                    quizSolvedState.solvedState.eq(solvedState)
+                    solvedStateEq(solvedState)
                 )
                 .fetch()
                 .size();

@@ -32,7 +32,14 @@ public interface QuizSolvedStateService {
 
     QuizSolvedState getQuizSolvedState(Long id);
 
-    //내가 현재 안 푼 문제 갯수 리턴
+    /**
+     * 내가 현재 푼 문제 갯수 리턴
+     */
+    int getSolvedQuizSize(Long userId);
+
+    /**
+     * 내가 현재 안 푼 문제 갯수 리턴
+     */
     int getUnsolvedQuizSize(Long userId);
 
     /**

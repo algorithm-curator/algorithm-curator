@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.ac.modulecommon.entity.quizsolving.SolvedState.NOT_PICKED;
-import static com.ac.modulecommon.entity.quizsolving.SolvedState.UNSOLVED;
+import static com.ac.modulecommon.entity.quizsolving.SolvedState.*;
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.ac.modulecommon.exception.EnumApiException.UNAUTHORIZED;
 import static com.google.common.base.Preconditions.checkArgument;
@@ -112,7 +111,14 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     public int getUnsolvedQuizSize(Long userId) {
         checkArgument(userId != null, "userId 값은 필수입니다.");
 
-        return quizSolvedStateRepository.countAllBySolvedState(userId, UNSOLVED);
+        return quizSolvedStateRepository.countBySolvedState(userId, UNSOLVED);
+    }
+
+    @Override
+    public int getSolvedQuizSize(Long userId) {
+        checkArgument(userId != null, "userId 값은 필수입니다.");
+
+        return quizSolvedStateRepository.countBySolvedState(userId, SOLVED);
     }
 
     @Override
