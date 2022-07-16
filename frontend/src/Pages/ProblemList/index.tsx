@@ -5,7 +5,7 @@ import ProblemListTab from "Components/Problem/ProblemListTab";
 import { ChartLink, Container, Title, TitleChartWrapper } from "./styles";
 
 function ProblemList() {
-	const [selectedProblem, setSelectedProblem] = useState<string>("");
+	// const [selectedProblem, setSelectedProblem] = useState<string>("");
 
 	const onClickProblem = (e: any) => {
 		console.log(e.target);
