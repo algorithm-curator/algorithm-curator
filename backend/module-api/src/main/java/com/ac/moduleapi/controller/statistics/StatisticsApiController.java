@@ -5,6 +5,7 @@ import com.ac.moduleapi.controller.statistics.StatisticsDto.SolvedRateResponse;
 import com.ac.moduleapi.controller.statistics.StatisticsDto.SolvedTraceResponse;
 import com.ac.moduleapi.service.quiz.QuizService;
 import com.ac.moduleapi.service.quizlog.query.QuizLogQueryService;
+import com.ac.moduleapi.service.quizlog.query.QuizLogTraceDto;
 import com.ac.moduleapi.service.quizsolving.QuizSolvedStateService;
 import com.ac.moduleapi.service.quizsolving.query.QuizSolvedStateQueryService;
 import com.ac.modulecommon.controller.ApiResult;
@@ -13,13 +14,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.ac.modulecommon.controller.ApiResult.OK;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @RequestMapping("/api/statistics")
 @RequiredArgsConstructor
@@ -49,11 +53,18 @@ public class StatisticsApiController {
     }
 
     @GetMapping("/solved-trace")
-    public ApiResult<List<SolvedTraceResponse>> getSolvedTraces(@AuthenticationPrincipal JwtAuthentication authentication) {
-        return OK(quizLogQueryService.getQuizLogTraces(authentication.getId(), LocalDateTime.now())
-                .stream()
-                .map(SolvedTraceResponse::from)
-                .collect(toList())
-        );
+    public ApiResult<SolvedTraceResponse> getSolvedTraces(@AuthenticationPrincipal JwtAuthentication authentication,
+                                                          @RequestParam(value = "date", required = false) String yyyymmdd) {
+
+        LocalDateTime firstUsageTime = quizLogQueryService.getFirstUsageTime(authentication.getId());
+
+        if (isEmpty(yyyymmdd)) {
+            List<QuizLogTraceDto> quizLogTraces = quizLogQueryService.getQuizLogTraces(authentication.getId(), LocalDate.now());
+            return OK(SolvedTraceResponse.of(firstUsageTime, quizLogTraces));
+        }
+
+        LocalDate localDate = LocalDate.parse(yyyymmdd);
+        List<QuizLogTraceDto> quizLogTraces = quizLogQueryService.getQuizLogTraces(authentication.getId(), localDate);
+        return OK(SolvedTraceResponse.of(firstUsageTime, quizLogTraces));
     }
 }

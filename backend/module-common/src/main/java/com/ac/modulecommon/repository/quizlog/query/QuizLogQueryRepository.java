@@ -19,7 +19,7 @@ public class QuizLogQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<QuizLogTraceQueryDto> getQuizLogTraces(Long userId, LocalDateTime time) {
+    public List<QuizLogTraceQueryDto> getQuizLogTraces(Long userId, LocalDateTime startTime, LocalDateTime endTime) {
         return jpaQueryFactory
                 .select(
                     Projections.constructor(QuizLogTraceQueryDto.class,
@@ -30,7 +30,7 @@ public class QuizLogQueryRepository {
                 .from(quizLog)
                 .where(
                         quizLog.user.id.eq(userId),
-                        quizLog.createdAt.between(time.minusMonths(1), time)
+                        quizLog.createdAt.between(startTime, endTime)
                 )
                 .groupBy(localDateFormat())
                 .orderBy(localDateFormat().desc()).fetch();
