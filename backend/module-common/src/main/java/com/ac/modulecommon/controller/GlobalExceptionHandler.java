@@ -7,12 +7,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartException;
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.exception.SdkClientException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.ac.modulecommon.controller.ApiResult.ERROR;
@@ -36,13 +41,45 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ERROR(errorMessage, status, invalidFields), headers, status);
     }
 
+    /**
+     * AuthenticationException 인증 과정중에 일어난 에러도 400으로 처리
+     */
     @ExceptionHandler({
             IllegalStateException.class, IllegalArgumentException.class,
             TypeMismatchException.class, HttpMessageNotReadableException.class,
-            MissingServletRequestParameterException.class, MultipartException.class
+            MissingServletRequestParameterException.class, MultipartException.class,
+            AuthenticationException.class
     })
     public ResponseEntity<?> handleBadRequestException(Exception e) {
         return createResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * ApiController 내 @Valid 전용 예외
+     *
+     * invalid_fields 예시
+     *
+     * {
+     *   "name" : "비어 있을 수 없습니다",
+     *   "email" : "비어 있을 수 없습니다"
+     * }
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidException(MethodArgumentNotValidException e) {
+        Map<String, String> errorMap = new HashMap<>();
+        e.getBindingResult().getFieldErrors()
+                .forEach(fieldError -> errorMap.put(fieldError.getField(), fieldError.getDefaultMessage()));
+
+        String errorMessage = "Bad request exception occurred";
+        return createResponseByInvalidFields(errorMessage, HttpStatus.BAD_REQUEST, errorMap);
+    }
+
+    @ExceptionHandler({
+            AwsServiceException.class, SdkClientException.class
+    })
+    public ResponseEntity<?> handleAwsErrorException(Exception e) {
+        log.warn("Aws exception occurred: {}", e.getMessage(), e);
+        return createResponse(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**

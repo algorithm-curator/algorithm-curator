@@ -22,6 +22,7 @@ subprojects {
     apply plugin: 'java-library'    // for gradle api, implementation build method
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     sourceCompatibility = 11
 

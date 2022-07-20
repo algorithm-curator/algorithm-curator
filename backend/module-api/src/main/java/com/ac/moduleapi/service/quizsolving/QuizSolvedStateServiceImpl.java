@@ -13,17 +13,20 @@ import com.ac.modulecommon.repository.quizsolving.QuizSolvedStateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.ac.modulecommon.entity.quizsolving.SolvedState.*;
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.ac.modulecommon.exception.EnumApiException.UNAUTHORIZED;
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -38,11 +41,12 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     private final QuizService quizService;
     private final UserService userService;
 
+    @Async
     @Override
     @Transactional
-    public List<QuizQueryDto> createRandomQuizzes(Long userId, int createCount) {
+    public CompletableFuture<List<QuizQueryDto>> createRandomQuizzes(Long userId, int createCount) {
         checkArgument(userId != null, "userId 값은 필수입니다.");
-        checkArgument(0 <= createCount && createCount <= 5, "count 값은 0~5 입니다.");
+        checkArgument(0 < createCount && createCount <= 3, "count 값은 1~3 입니다.");
 
         List<QuizQueryDto> candidates = quizQueryRepository.findAll(userId, PageRequest.of(0, QUIZ_SEARCH_SIZE));
         List<QuizQueryDto> modifiableCandidates = new ArrayList<>(candidates);
@@ -53,7 +57,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
 
         List<QuizQueryDto> randomQuizzes = modifiableCandidates.subList(0, createCount);
 
-        return randomQuizzes.stream().map(quiz -> {
+        return completedFuture(randomQuizzes.stream().map(quiz -> {
             if (quiz.getQuizSolvedStateId() == null) {
                 Long quizSolvedStateId = create(user, quiz.getQuizId());
                 return QuizQueryDto.of(quizSolvedStateId, quiz);
@@ -61,7 +65,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
                 update(quiz.getQuizSolvedStateId(), UNSOLVED, user.getId());
                 return quiz;
             }
-        }).collect(toList());
+        }).collect(toList()));
     }
 
     @Override

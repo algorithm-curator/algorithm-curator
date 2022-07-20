@@ -5,15 +5,19 @@ import com.ac.moduleapi.controller.quizsolving.QuizSolvedStateDto.PickResponse;
 import com.ac.moduleapi.controller.quizsolving.QuizSolvedStateDto.UpdateRequest;
 import com.ac.moduleapi.service.quizsolving.QuizSolvedStateService;
 import com.ac.modulecommon.controller.ApiResult;
+import com.ac.modulecommon.controller.ErrorResponseEntity;
 import com.ac.modulecommon.entity.quizsolving.SolvedState;
 import com.ac.modulecommon.jwt.JwtAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.ac.modulecommon.controller.ApiResult.OK;
 import static java.util.stream.Collectors.toList;
@@ -28,8 +32,11 @@ public class QuizSolvedStateApiController {
 
     private final QuizSolvedStateService quizSolvedStateService;
 
+    /**
+     * return value: ApiResult<List<PickResponse>>
+     */
     @PostMapping
-    public ApiResult<List<PickResponse>> pickQuizzes(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public CompletableFuture<ResponseEntity<ApiResult<?>>> pickQuizzes(@AuthenticationPrincipal JwtAuthentication authentication) {
 
         int unsolvedQuizSize = quizSolvedStateService.getUnsolvedQuizSize(authentication.getId());
 
@@ -37,10 +44,16 @@ public class QuizSolvedStateApiController {
             throw new IllegalStateException("해결 못한 문제가 20문제를 초과하는 경우 더 이상 문제를 뽑을 수 없습니다.");
         }
 
-        return OK(quizSolvedStateService.createRandomQuizzes(authentication.getId(), PICK_COUNT)
-                    .stream()
-                    .map(PickResponse::from)
-                    .collect(toList()));
+        return quizSolvedStateService.createRandomQuizzes(authentication.getId(), PICK_COUNT)
+                .handle((quizQueryDtos, throwable) -> {
+
+            if (quizQueryDtos != null) {
+                List<PickResponse> response = quizQueryDtos.stream().map(PickResponse::from).collect(toList());
+                return new ResponseEntity<>(OK(response), HttpStatus.OK);
+            }
+
+            return ErrorResponseEntity.from(throwable, true);
+        });
     }
 
     /**

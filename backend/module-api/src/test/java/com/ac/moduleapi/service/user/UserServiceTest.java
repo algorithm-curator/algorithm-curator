@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +46,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void oauthId가_주어지면_회원가입을_할_수_있다() {
+    public void oauthId가_주어지면_회원가입을_할_수_있다() throws ExecutionException, InterruptedException {
         //given
         Long mockUserId = 1L;
         Long mockOauthId = 12345L;
@@ -56,7 +57,7 @@ class UserServiceTest {
 
         //when
         Long oauthId = 12345L;
-        Long userId = userService.create(oauthId);
+        Long userId = userService.create(oauthId).get();
 
         //then
         verify(userRepository).save(any());
@@ -68,7 +69,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void oauthId가_이미_존재하는_회원은_기존에_가입된_정보를_반환한다() {
+    public void oauthId가_이미_존재하는_회원은_기존에_가입된_정보를_반환한다() throws ExecutionException, InterruptedException {
         //given
         Long mockUserId = 1L;
         Long mockOauthId = 12345L;
@@ -79,7 +80,7 @@ class UserServiceTest {
 
         //when
         Long oauthId = 12345L;
-        Long userId = userService.create(oauthId);
+        Long userId = userService.create(oauthId).get();
 
         //then
         verify(userRepository, never()).save(any());
@@ -159,6 +160,22 @@ class UserServiceTest {
     }
 
     @Test
+    public void 닉네임_등록_시_중복된_경우_예외를_반환한다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(true);
+        Long userId = mockUser.getId();
+        String duplicatedNickname = "duplicated nickname";
+
+        //when
+        Assertions.assertThrows(IllegalArgumentException.class,() -> userService.update(userId, duplicatedNickname));
+
+        //then
+        verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
+    }
+
+    @Test
     public void 닉네임만_수정_시_중복된_닉네임이어도_기존의_본인_닉네임이면_예외를_반환하지_않는다() {
         //given
         given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
@@ -197,6 +214,25 @@ class UserServiceTest {
     }
 
     @Test
+    public void 회원정보_중_닉네임과_프로필_이미지를_수정_시_닉네임이_중복되면_예외를_반환한다() {
+        //given
+        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
+        given(userRepository.exists(anyString())).willReturn(true);
+        given(uploadUtils.isNotImageFile(anyString())).willReturn(false);
+        Long userId = mockUser.getId();
+        String duplicatedNickname = "duplicated nickname";
+        String newProfileImage = "new profileImage";
+
+        //when
+        Assertions.assertThrows(IllegalArgumentException.class, () -> userService.update(userId, duplicatedNickname, newProfileImage));
+
+        //then
+        verify(userRepository).findById(anyLong());
+        verify(userRepository).exists(anyString());
+        verify(uploadUtils).isNotImageFile(anyString());
+    }
+
+    @Test
     public void 닉네임과_이미지_수정_시_중복된_닉네임이어도_기존의_본인_닉네임이면_예외를_반환하지_않는다() {
         //given
         given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(mockUser));
@@ -227,7 +263,7 @@ class UserServiceTest {
         String newProfileImage = "new profileImage";
 
         //when
-        Assertions.assertThrows(ApiException.class, () -> userService.update(userId, newNickname, newProfileImage));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> userService.update(userId, newNickname, newProfileImage));
 
         //then
         assertThat(mockUser.getNickname()).isEqualTo(newNickname);

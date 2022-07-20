@@ -1,10 +1,7 @@
 package com.ac.modulecommon.entity.user;
 
-import com.ac.modulecommon.exception.ApiException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-
-import static com.ac.modulecommon.exception.EnumApiException.ILLEGAL_ARGUMENT;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Role {
@@ -24,6 +21,6 @@ public enum Role {
             }
         }
 
-        throw new ApiException(ILLEGAL_ARGUMENT, String.format("%s는 올바르지 않은 Role입니다.", name));
+        throw new IllegalArgumentException("올바르지 않은 Role입니다.");
     }
 }

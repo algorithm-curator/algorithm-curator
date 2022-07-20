@@ -2,8 +2,10 @@ package com.ac.moduleapi.service.user;
 
 import com.ac.modulecommon.entity.user.User;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface UserService {
-    Long create(Long oauthId);
+    CompletableFuture<Long> create(Long oauthId);
 
     User getUser(Long id);
 

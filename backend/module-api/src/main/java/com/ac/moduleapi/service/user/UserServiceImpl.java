@@ -5,14 +5,16 @@ import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.user.UserRepository;
 import com.ac.modulecommon.util.UploadUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-import static com.ac.modulecommon.exception.EnumApiException.ILLEGAL_ARGUMENT;
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Transactional(readOnly = true)
@@ -23,20 +25,21 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UploadUtils uploadUtils;
 
+    @Async
     @Override
     @Transactional
-    public Long create(Long oauthId) {
+    public CompletableFuture<Long> create(Long oauthId) {
         checkArgument(oauthId != null, "oauthId 값은 필수입니다.");
 
         if (userRepository.existsByOAuth(oauthId)) {
-            return getUserByOauthId(oauthId).getId();
+            return completedFuture(getUserByOauthId(oauthId).getId());
         }
 
         User user = User.builder()
                         .oauthId(oauthId)
                         .build();
 
-        return userRepository.save(user).getId();
+        return completedFuture(userRepository.save(user).getId());
     }
 
     @Override
@@ -67,7 +70,7 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
 
         if (!isValidNicknameRequest(user,nickname)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
 
         user.update(nickname);
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService {
         checkArgument(isNotBlank(profileImage), "profileImage 값은 필수입니다.");
 
         if (uploadUtils.isNotImageFile(profileImage)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
+            throw new IllegalArgumentException("png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
         }
 
         String randomProfileImageUrl = UUID.randomUUID() + profileImage;
@@ -89,7 +92,7 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
 
         if (!isValidNicknameRequest(user,nickname)) {
-            throw new ApiException(ILLEGAL_ARGUMENT, "중복된 닉네임입니다.");
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
 
         user.update(nickname, randomProfileImageUrl);

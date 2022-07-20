@@ -7,6 +7,11 @@ spring:
         show_sql: true
         format_sql: true
 #        use_sql_comments: true
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 10
 
 oauth:
   kakao:
@@ -20,6 +25,13 @@ jwt:
   issuer: algorithm-curator
   client-secret: algorithm-curator
   expiry-seconds: 7200 # 2시간
+
+async:
+  thread:
+    thread-name-prefix: async-thread-
+    core-pool-size: 2  # 동시에 실행시킬 쓰레드의 갯수
+    max-pool-size: 10   # 쓰레드 풀의 최대 사이즈
+    queue-capacity: 20 # 쓰레드 풀 큐의 사이즈.
 
 ---
 spring:
