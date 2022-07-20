@@ -2,8 +2,10 @@ package com.ac.moduleapi.service.quizsolving.query;
 
 import com.ac.modulecommon.entity.quiztype.QuizType;
 import com.ac.modulecommon.repository.quizsolving.query.QuizSolvedStateQueryRepository;
+import com.ac.modulecommon.repository.quizsolving.query.QuizSolvedStateRankQueryDto;
 import com.ac.modulecommon.repository.quizsolving.query.SolvedCntByQuizTypeQueryDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +35,9 @@ public class QuizSolvedStateQueryService {
             long count = solvingCountByQuizTypeMap.getOrDefault(quizType, 0L);
             return new SolvedCntByQuizTypeQueryDto(quizType, count);
         }).collect(toList());
+    }
+
+    public List<QuizSolvedStateRankQueryDto> getRanks(Pageable pageable) {
+        return queryRepository.findAllRank(pageable);
     }
 }
