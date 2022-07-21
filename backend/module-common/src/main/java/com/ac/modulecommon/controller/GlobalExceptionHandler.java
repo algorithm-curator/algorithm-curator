@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartException;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
             IllegalStateException.class, IllegalArgumentException.class,
             TypeMismatchException.class, HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class, MultipartException.class,
-            AuthenticationException.class
+            AuthenticationException.class, DateTimeParseException.class
     })
     public ResponseEntity<?> handleBadRequestException(Exception e) {
         return createResponse(e, HttpStatus.BAD_REQUEST);
