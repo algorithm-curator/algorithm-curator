@@ -28,6 +28,14 @@ spring:
   config:
     activate:
       on-profile: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/aqc;MODE=MYSQL;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
   kafka:
     consumer:
       bootstrap-servers: localhost:9095
