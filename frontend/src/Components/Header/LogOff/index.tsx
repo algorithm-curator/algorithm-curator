@@ -1,10 +1,11 @@
 import React from "react";
+import { KAKAO_AUTH_URL } from "utils/KakaoLogin/OAuth";
 import { Container, LoginButton } from "./styles";
 
 function LogOff() {
 	return (
 		<Container>
-			<LoginButton>Login</LoginButton>
+			<LoginButton href={KAKAO_AUTH_URL}>Login</LoginButton>
 		</Container>
 	);
 }

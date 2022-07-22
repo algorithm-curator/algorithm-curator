@@ -1,28 +1,34 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./Styles/style.css";
+import { RecoilRoot } from "recoil";
+import "./styles/style.css";
 
-import Header from "Components/Header";
-import Main from "Pages/Main";
-import ProblemToday from "Pages/ProblemToday";
-import ProblemList from "Pages/ProblemList";
-import Rank from "Pages/Rank";
-import MyChart from "Pages/MyChart";
-import MyPage from "Pages/MyPage";
+import Header from "components/Header";
+import Main from "pages/Main";
+import ProblemToday from "pages/ProblemToday";
+import ProblemList from "pages/ProblemList";
+import Rank from "pages/Rank";
+import MyChart from "pages/MyChart";
+import MyPage from "pages/MyPage";
+import OAuth2RedirectHandler from "utils/KakaoLogin/OAuth2RedirectHandler";
 
 function App() {
 	return (
-		<BrowserRouter>
-			<Header />
-			<Routes>
-				<Route path="/" element={<Main />} />
-				<Route path="/problem/" element={<ProblemToday />} />
-				<Route path="/problemlist" element={<ProblemList />} />
-				<Route path="/mychart" element={<MyChart />} />
-				<Route path="/rank" element={<Rank />} />
-				<Route path="/mypage" element={<MyPage />} />
-			</Routes>
-		</BrowserRouter>
+		<RecoilRoot>
+			<BrowserRouter>
+				<Header />
+				<Routes>
+					<Route path="/" element={<Main />} />
+					<Route path="/problem/" element={<ProblemToday />} />
+					<Route path="/problemlist" element={<ProblemList />} />
+					<Route path="/mychart" element={<MyChart />} />
+					<Route path="/rank" element={<Rank />} />
+					<Route path="/mypage" element={<MyPage />} />
+					{/* prettier-ignore */}
+					<Route path='/oauth/callback/kakao' element={<OAuth2RedirectHandler />} />
+				</Routes>
+			</BrowserRouter>
+		</RecoilRoot>
 	);
 }
 

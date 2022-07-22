@@ -1,6 +1,6 @@
 import React from "react";
-import ProblemChart from "Components/MyChart/ProblemChart";
-import UntilNowSolveCount from "Components/MyChart/UntilNowSolveCount";
+import ProblemChart from "components/myChart/ProblemChart";
+import UntilNowSolveCount from "components/myChart/UntilNowSolveCount";
 import { Container } from "./styles";
 
 function MyChart() {

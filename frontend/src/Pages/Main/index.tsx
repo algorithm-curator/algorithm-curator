@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import axiosInstance from "Utils/axiosInstance";
+import axiosInstance from "utils/axiosInstance";
 import { Container, Title, DrawButton } from "./styles";
 
 function Main() {

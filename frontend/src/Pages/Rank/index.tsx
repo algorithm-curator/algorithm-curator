@@ -18,9 +18,9 @@ function Rank() {
 				<Menu>푼 문제/정답률</Menu>
 			</MenuWrapper>
 			<UserInfoWrapper>
-				<UserInfo>1</UserInfo>
-				<UserInfo>nickname</UserInfo>
-				<UserInfo>140</UserInfo>
+				<UserInfo key={1}>1</UserInfo>
+				<UserInfo key={2}>nickname</UserInfo>
+				<UserInfo key={3}>140</UserInfo>
 			</UserInfoWrapper>
 		</Container>
 	);

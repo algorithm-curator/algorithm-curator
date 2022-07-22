@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Container = styled.table`
+export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin: 7rem auto;
@@ -47,7 +47,7 @@ export const ProfileEditSubmit = styled.button`
 	cursor: pointer;
 `;
 
-export const DeduplicationCheck = styled.button`
+export const NicknameCheck = styled.button`
 	margin: auto;
 	padding: 0.5rem 1rem;
 	border: none;

@@ -1,7 +1,7 @@
 import React from "react";
 
-import ProblemTab from "Components/Problem/ProblemTab";
-import ProblemDraw from "Components/Problem/ProblemDraw";
+import ProblemTab from "components/problem/ProblemTab";
+import ProblemDraw from "components/problem/ProblemDraw";
 import {
 	Container,
 	ProblemListTextWrapper,

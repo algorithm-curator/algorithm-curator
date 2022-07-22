@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import ProblemAllList from "Components/Problem/ProblemAllList";
-import ProblemListTab from "Components/Problem/ProblemListTab";
+import ProblemAllList from "components/problem/ProblemAllList";
+import ProblemListTab from "components/problem/ProblemListTab";
 import { ChartLink, Container, Title, TitleChartWrapper } from "./styles";
 
 function ProblemList() {
