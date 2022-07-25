@@ -38,4 +38,5 @@ out/
 
 ### PROPERTIES PROTECTION ###
 /module-api/src/main/resources/aws.properties
+/module-log/src/main/resources/aws.properties
 

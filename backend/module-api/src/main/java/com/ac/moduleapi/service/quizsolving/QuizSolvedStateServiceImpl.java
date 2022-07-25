@@ -6,10 +6,12 @@ import com.ac.modulecommon.entity.quiz.Quiz;
 import com.ac.modulecommon.entity.quizsolving.QuizSolvedState;
 import com.ac.modulecommon.entity.quizsolving.SolvedState;
 import com.ac.modulecommon.entity.user.User;
+import com.ac.modulecommon.event.QuizSolvedStateChangeEvent;
 import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryDto;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryRepository;
 import com.ac.modulecommon.repository.quizsolving.QuizSolvedStateRepository;
+import com.google.common.eventbus.EventBus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
     private final QuizQueryRepository quizQueryRepository;
     private final QuizService quizService;
     private final UserService userService;
+    private final EventBus eventBus;
 
     @Async
     @Override
@@ -82,7 +85,10 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
                                                 .solvedState(UNSOLVED)
                                                 .build();
 
-        return quizSolvedStateRepository.save(state).getId();
+        QuizSolvedState savedState = quizSolvedStateRepository.save(state);
+        eventBus.post(QuizSolvedStateChangeEvent.of(savedState.getUser(), savedState.getQuiz(), UNSOLVED));
+
+        return savedState.getId();
     }
 
     @Override
@@ -139,6 +145,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
         }
 
         quizSolvedState.update(solvedState);
+        eventBus.post(QuizSolvedStateChangeEvent.of(quizSolvedState.getUser(), quizSolvedState.getQuiz(), solvedState));
     }
 
     @Override
@@ -153,6 +160,7 @@ public class QuizSolvedStateServiceImpl implements QuizSolvedStateService {
         }
 
         quizSolvedState.update(NOT_PICKED);
+        eventBus.post(QuizSolvedStateChangeEvent.of(quizSolvedState.getUser(), quizSolvedState.getQuiz(), NOT_PICKED));
     }
 
     private boolean isOwner(QuizSolvedState quizSolvedState, Long userId) {

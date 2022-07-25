@@ -4,7 +4,7 @@ COPY ./ ./
 
 RUN chmod +x ./gradlew
 
-RUN ./gradlew clean :module-api:build -x test
+RUN ./gradlew clean :module-log:build -x test
 
 
 FROM openjdk:11
@@ -16,8 +16,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 WORKDIR /app
 
-COPY --from=builder module-api/build/libs/*.jar ./module-api.jar
-COPY module-api/docker-entrypoint.sh ./docker-entrypoint.sh
+COPY --from=builder module-log/build/libs/*.jar ./module-log.jar
+COPY module-log/docker-entrypoint.sh ./docker-entrypoint.sh
 
 RUN chmod +x ./docker-entrypoint.sh
 ENTRYPOINT ./docker-entrypoint.sh

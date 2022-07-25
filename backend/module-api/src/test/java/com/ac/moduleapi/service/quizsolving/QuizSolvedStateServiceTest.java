@@ -10,8 +10,10 @@ import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryDto;
 import com.ac.modulecommon.repository.quiz.query.QuizQueryRepository;
 import com.ac.modulecommon.repository.quizsolving.QuizSolvedStateRepository;
+import com.google.common.eventbus.EventBus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,8 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +59,9 @@ class QuizSolvedStateServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private EventBus eventBus;
 
     private Quiz mockQuiz;
     private User mockUser;
@@ -85,11 +89,9 @@ class QuizSolvedStateServiceTest {
                 .build();
     }
 
-    /**
-     * start test createRandomQuizzes
-     */
     @Test
-    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_insert_case() throws ExecutionException, InterruptedException {
+    @DisplayName("뽑힌_데이터_중_count_만큼만_결과를_반환한다_insert_case")
+    public void createRandomQuizzes_1() throws ExecutionException, InterruptedException {
         //given
         int loopSize = 100;
         List<QuizQueryDto> dtoList = new ArrayList<>();
@@ -103,6 +105,7 @@ class QuizSolvedStateServiceTest {
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
+        doNothing().when(eventBus).post(any());
 
         int count = 3;
 
@@ -116,10 +119,12 @@ class QuizSolvedStateServiceTest {
         verify(quizService, times(count)).getQuiz(any());
         verify(quizSolvedStateRepository, times(count)).save(any());
         verify(quizSolvedStateRepository, never()).findById(anyLong());
+        verify(eventBus, Mockito.times(count)).post(any());
     }
 
     @Test
-    public void 뽑힌_데이터_중_count_만큼만_결과를_반환한다_update_case() throws ExecutionException, InterruptedException {
+    @DisplayName("뽑힌_데이터_중_count_만큼만_결과를_반환한다_update_case")
+    public void createRandomQuizzes_2() throws ExecutionException, InterruptedException {
         //given
         int loopSize = 100;
         List<QuizQueryDto> dtoList = new ArrayList<>();
@@ -132,6 +137,7 @@ class QuizSolvedStateServiceTest {
         given(quizQueryRepository.findAll(any(), any())).willReturn(dtoList);
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        doNothing().when(eventBus).post(any());
 
         int count = 3;
 
@@ -145,10 +151,12 @@ class QuizSolvedStateServiceTest {
         verify(quizService, never()).getQuiz(any());
         verify(quizSolvedStateRepository, never()).save(any());
         verify(quizSolvedStateRepository, times(count)).findOne(anyLong());
+        verify(eventBus, Mockito.times(count)).post(any());
     }
 
     @Test
-    public void 이미_저장된_정보는_update문으로_상태가_변경되고_새로_저장된_정보만_insert_된다() {
+    @DisplayName("이미_저장된_정보는_update문으로_상태가_변경되고_새로_저장된_정보만_insert_된다")
+    public void createRandomQuizzes_3() {
         //given
         QuizQueryDto nullDto1 = new QuizQueryDto(null, 1L, "title1", "www.naver.com", BOJ_SILVER, BOJ);
         QuizQueryDto notNullDto1 = new QuizQueryDto(1L, 1L, "title2", "www.naver.com", BOJ_GOLD, PG);
@@ -162,6 +170,7 @@ class QuizSolvedStateServiceTest {
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        doNothing().when(eventBus).post(any());
 
         int count = 3;
 
@@ -174,10 +183,12 @@ class QuizSolvedStateServiceTest {
         verify(quizService, times(1)).getQuiz(any());
         verify(quizSolvedStateRepository, times(1)).save(any());
         verify(quizSolvedStateRepository, times(2)).findOne(anyLong());
+        verify(eventBus, Mockito.times(count)).post(any());
     }
 
     @Test
-    public void quizSolvedStateId가_null_인_데이터는_새_id를_할당받고_UNSOLVED_의_QuizSolvedState가_생성된다() throws ExecutionException, InterruptedException {
+    @DisplayName("quizSolvedStateId가_null_인_데이터는_새_id를_할당받고_UNSOLVED_의_QuizSolvedState가_생성된다")
+    public void createRandomQuizzes_4() throws ExecutionException, InterruptedException {
         //given
         QuizQueryDto dto = new QuizQueryDto(null,
                 mockQuiz.getId(),
@@ -191,6 +202,7 @@ class QuizSolvedStateServiceTest {
         given(quizService.getQuiz(anyLong())).willReturn(mockQuiz);
         given(quizSolvedStateRepository.save(any())).willReturn(mockSolvedState);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        doNothing().when(eventBus).post(any());
 
         int count = 1;
 
@@ -212,10 +224,12 @@ class QuizSolvedStateServiceTest {
         verify(quizSolvedStateRepository, Mockito.times(count)).save(any());
         verify(quizSolvedStateRepository).save(any());
         verify(quizSolvedStateRepository).findOne(anyLong());
+        verify(eventBus, Mockito.times(count)).post(any());
     }
 
     @Test
-    public void quizSolvedStateId가_이미_있던_NOT_PICKED_상태의_데이터는_UNSOLVED_상태로_변경된다() throws ExecutionException, InterruptedException {
+    @DisplayName("quizSolvedStateId가_이미_있던_NOT_PICKED_상태의_데이터는_UNSOLVED_상태로_변경된다")
+    public void createRandomQuizzes_5() throws ExecutionException, InterruptedException {
         //given
         QuizSolvedState notPickedSolvedState = QuizSolvedState.builder()
                 .id(5L)
@@ -234,6 +248,7 @@ class QuizSolvedStateServiceTest {
         given(quizQueryRepository.findAll(any(), any())).willReturn(List.of(dto));
         given(userService.getUser(anyLong())).willReturn(mockUser);
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(notPickedSolvedState));
+        doNothing().when(eventBus).post(any());
 
         int count = 1;
 
@@ -256,10 +271,12 @@ class QuizSolvedStateServiceTest {
         verify(quizService, never()).getQuiz(any());
         verify(quizSolvedStateRepository, never()).save(any());
         verify(quizSolvedStateRepository, Mockito.times(3)).findOne(anyLong());
+        verify(eventBus, Mockito.times(count)).post(any());
     }
 
     @Test
-    public void 한_개에서_세_개까지의_갯수만_요청할_수_있다() {
+    @DisplayName("한_개에서_세_개까지의_갯수만_요청할_수_있다")
+    public void createRandomQuizzes_6() {
         //given
         int overCountRequest = 4;
         int underCountRequest = 0;
@@ -277,16 +294,12 @@ class QuizSolvedStateServiceTest {
         verify(quizService, never()).getQuiz(any());
         verify(quizSolvedStateRepository, never()).save(any());
         verify(quizSolvedStateRepository, never()).findOne(anyLong());
+        verify(eventBus, never()).post(any());
     }
-    /**
-     * end test createRandomQuizzes
-     */
 
-    /**
-     * start test create
-     */
     @Test
-    public void 유저_엔티티나_quizId가_null이면_quizSolvedState_생성_시_예외를_반환한다() {
+    @DisplayName("유저_엔티티나_quizId가_null이면_quizSolvedState_생성_시_예외를_반환한다")
+    public void create_1() {
         //given
         //when
         assertThatThrownBy(() -> quizSolvedStateService.create(null, mockQuiz.getId()))
@@ -297,16 +310,15 @@ class QuizSolvedStateServiceTest {
         //then
         verify(quizService, never()).getQuiz(anyLong());
         verify(quizSolvedStateRepository, never()).save(any());
+        verify(eventBus, never()).post(any());
     }
-    /**
-     * end test create
-     */
 
     /**
      * start test getQuizSolvedStates
      */
     @Test
-    public void QuizSolvedStates를_조회할_수_있다() {
+    @DisplayName("QuizSolvedStates를_조회할_수_있다")
+    public void getQuizSolvedStates_1() {
         //given
         List<QuizSolvedState> list = Arrays.asList(mockSolvedState, mockSolvedState, mockSolvedState, mockSolvedState);
         given(quizSolvedStateRepository.findAll(anyLong(), any(), any())).willReturn(list);
@@ -321,7 +333,8 @@ class QuizSolvedStateServiceTest {
     }
 
     @Test
-    public void 특정_상태에_있는_QuizSolvedStates를_조회할_수_있다() {
+    @DisplayName("특정_상태에_있는_QuizSolvedStates를_조회할_수_있다")
+    public void getQuizSolvedStates_2() {
         //given
         QuizSolvedState solvedState1 = QuizSolvedState.builder()
                 .id(2L)
@@ -352,7 +365,8 @@ class QuizSolvedStateServiceTest {
     }
 
     @Test
-    public void NOT_PICKED_상태는_조회_시_예외를_반환한다() {
+    @DisplayName("NOT_PICKED_상태는_조회_시_예외를_반환한다")
+    public void getQuizSolvedStates_3() {
         //given
         QuizSolvedState notPickedState = QuizSolvedState.builder()
                 .id(2L)
@@ -371,15 +385,10 @@ class QuizSolvedStateServiceTest {
         //then
         verify(quizSolvedStateRepository, never()).findAll(anyLong(), any(), any());
     }
-    /**
-     * end test getQuizSolvedStates
-     */
 
-    /**
-     * start test getQuizSolvedState
-     */
     @Test
-    public void 단_건_조회_시_데이터를_찾지_못하면_예외를_반환한다() {
+    @DisplayName("단_건_조회_시_데이터를_찾지_못하면_예외를_반환한다")
+    public void getQuizSolvedState_1() {
         //given
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.empty());
 
@@ -390,15 +399,13 @@ class QuizSolvedStateServiceTest {
         //then
         verify(quizSolvedStateRepository).findOne(anyLong());
     }
-    /**
-     * end test getQuizSolvedState
-     */
 
     /**
      * start test getUnsolvedQuizSize, getSolvedQuizSize
      */
     @Test
-    public void 내가_해결한_문제와_해결하지_못한_문제_갯수를_조회할_수_있다() {
+    @DisplayName("내가_해결한_문제와_해결하지_못한_문제_갯수를_조회할_수_있다")
+    public void getUnsolvedQuizSize_getSolvedQuizSize() {
         //given
         int countSize = 5;
         given(quizSolvedStateRepository.countBySolvedState(anyLong(), any())).willReturn(countSize);
@@ -414,9 +421,11 @@ class QuizSolvedStateServiceTest {
     }
 
     @Test
-    public void 문제_상태를_변경할_수_있다() {
+    @DisplayName("문제_상태를_변경할_수_있다")
+    public void update_1() {
         //given
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        doNothing().when(eventBus).post(any());
 
         //초기 상태: NOT_PICKED
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(UNSOLVED);
@@ -428,13 +437,12 @@ class QuizSolvedStateServiceTest {
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(newState);
         verify(quizSolvedStateRepository).findOne(anyLong());
+        verify(eventBus).post(any());
     }
 
-    /**
-     * start test update
-     */
     @Test
-    public void 안_뽑음_상태로는_변경할_수_없다() {
+    @DisplayName("안_뽑음_상태로는_변경할_수_없다")
+    public void update_2() {
         //given
         //when
         assertThatThrownBy(() -> quizSolvedStateService.update(mockSolvedState.getId(), NOT_PICKED, mockUser.getId()))
@@ -442,10 +450,12 @@ class QuizSolvedStateServiceTest {
 
         //then
         verify(quizSolvedStateRepository, never()).findOne(anyLong());
+        verify(eventBus, never()).post(any());
     }
 
     @Test
-    public void 내가_뽑은_문제가_아니면_문제_상태를_변경할_수_없다() {
+    @DisplayName("내가_뽑은_문제가_아니면_문제_상태를_변경할_수_없다")
+    public void update_3() {
         //given
         User otherUser = User.builder().id(2L)
                 .oauthId(6789L)
@@ -466,12 +476,15 @@ class QuizSolvedStateServiceTest {
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(UNSOLVED);
         verify(quizSolvedStateRepository).findOne(anyLong());
+        verify(eventBus, never()).post(any());
     }
 
     @Test
-    public void 주어진_문제를_안뽑음_상태로_변경할_수_있다() {
+    @DisplayName("주어진_문제를_안뽑음_상태로_변경할_수_있다")
+    public void delete_1() {
         //given
         given(quizSolvedStateRepository.findOne(anyLong())).willReturn(Optional.ofNullable(mockSolvedState));
+        doNothing().when(eventBus).post(any());
 
         //초기 상태: NOT_PICKED
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(UNSOLVED);
@@ -482,10 +495,12 @@ class QuizSolvedStateServiceTest {
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(SolvedState.NOT_PICKED);
         verify(quizSolvedStateRepository).findOne(anyLong());
+        verify(eventBus).post(any());
     }
 
     @Test
-    public void 내가_뽑은_문제가_아니면_안뽑음_상태로_변경할_수_없다() {
+    @DisplayName("내가_뽑은_문제가_아니면_안뽑음_상태로_변경할_수_없다")
+    public void delete_2() {
         //given
         User otherUser = User.builder().id(2L)
                 .oauthId(6789L)
@@ -505,5 +520,6 @@ class QuizSolvedStateServiceTest {
         //then
         assertThat(mockSolvedState.getSolvedState()).isEqualTo(UNSOLVED);
         verify(quizSolvedStateRepository).findOne(anyLong());
+        verify(eventBus, never()).post(any());
     }
 }
