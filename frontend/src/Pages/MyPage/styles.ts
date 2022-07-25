@@ -30,9 +30,9 @@ export const ProfileImage = styled.div<{ srcUrl: any }>`
 	width: 200px;
 	height: 200px;
 	border-radius: 1rem;
-	background-color: white;
 	cursor: pointer;
-	/* background-image: url(${(props) => props.srcUrl}); */
+	background-image: url(${(props) => props.srcUrl});
+	background-size: cover;
 `;
 
 export const ProfileEditSubmit = styled.button`
@@ -49,8 +49,14 @@ export const ProfileEditSubmit = styled.button`
 
 export const NicknameCheck = styled.button`
 	margin: auto;
-	padding: 0.5rem 1rem;
+	padding: 0.8rem 1rem;
 	border: none;
 	background-color: rgba(255, 255, 255, 0.5);
 	cursor: pointer;
+`;
+
+export const LimitTextBox = styled.div`
+	height: 1rem;
+	font-size: 0.8rem;
+	color: red;
 `;
