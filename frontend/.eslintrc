@@ -23,7 +23,8 @@
 			2,
 			{ "extensions": [".js", ".jsx", ".ts", ".tsx"] }
 		],
-		"jsx-a11y/no-noninteractive-element-interactions": 0
+		"jsx-a11y/no-noninteractive-element-interactions": 0,
+		"no-alert": "off"
 	},
 	"env": {
 		"browser": true

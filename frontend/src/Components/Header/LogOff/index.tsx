@@ -1,5 +1,5 @@
 import React from "react";
-import { KAKAO_AUTH_URL } from "utils/KakaoLogin/OAuth";
+import { KAKAO_AUTH_URL } from "Utils/KakaoLogin/OAuth";
 import { Container, LoginButton } from "./styles";
 
 function LogOff() {

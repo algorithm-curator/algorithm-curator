@@ -1,17 +1,18 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { isLoggedState } from "stores/Auth";
 import { getLogin } from "apis/auth";
 import { getMyProfile, join } from "apis/user";
 import { KAKAO_AUTH_TOKEN_URL } from "./OAuth";
 import { KAKAO_ACCESS_TOKEN, API_TOKEN } from "../localStorageKeys";
 
 // 추가적으로 해야할 작업
-// 1. 로그인에 따라서 상태 업데이트
-// 2. 후에 헤더에서 로그인 헤더로 보여줘야함.
 function OAuth2RedirectHandler() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
+	const [isLogged, setIsLogged] = useRecoilState(isLoggedState);
 
 	useEffect(() => {
 		const code = searchParams.get("code");
@@ -42,7 +43,10 @@ function OAuth2RedirectHandler() {
 										// 2. 닉네임 있는 경우는 landingPage 이동 -> 기존 있던 페이지로 이동하게 할 필요가 있다.
 										.then((res) => {
 											if (!res.data.response.nickname) navigate("/mypage");
-											else navigate("/");
+											else {
+												setIsLogged(true);
+												navigate("/");
+											}
 										})
 										.catch((err) => {
 											console.log(err);

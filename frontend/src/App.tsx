@@ -10,7 +10,7 @@ import ProblemList from "pages/ProblemList";
 import Rank from "pages/Rank";
 import MyChart from "pages/MyChart";
 import MyPage from "pages/MyPage";
-import OAuth2RedirectHandler from "utils/KakaoLogin/OAuth2RedirectHandler";
+import OAuth2RedirectHandler from "Utils/KakaoLogin/OAuth2RedirectHandler";
 
 function App() {
 	return (

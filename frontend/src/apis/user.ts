@@ -1,4 +1,4 @@
-import axiosInstance from "utils/axiosInstance";
+import axiosInstance from "Utils/axiosInstance";
 
 export const checkNickname = (apiKey: string | null, name: string) => {
 	return axiosInstance.get(`/api/users/nickname?name=${name}`, {
@@ -6,7 +6,7 @@ export const checkNickname = (apiKey: string | null, name: string) => {
 	});
 };
 
-export const getMyProfile = (apiKey: string) => {
+export const getMyProfile = (apiKey: string | null) => {
 	return axiosInstance.get(`/api/users`, {
 		headers: { api_key: `Bearer ${apiKey}` },
 	});
