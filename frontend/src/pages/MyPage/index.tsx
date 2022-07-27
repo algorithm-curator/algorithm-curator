@@ -17,13 +17,12 @@ import {
 	LimitTextBox,
 } from "./styles";
 
-// 2. 헤더 변경을 헤아됨. -> 이거는 상태 관리로 되는지 생각해보자
-//  2-1. 초기 로그인 시, 헤더는 비로그인상태 헤더로
-//  2-2. 프로필 수정 버튼 시, 헤더는 로그인상태 헤더로
+// 이미지 URL, 이미지 파일 -> 두 가지가 있는데 API 사용할때 유의.
 // * process.env.PUBLIC_URL -> 빈 문자열 출력되는 현상
 function MyPage() {
 	const imageInput = useRef<HTMLInputElement>(null);
 	const [nicknameText, setNicknameText] = useState<string>("");
+	const [initialNickname, setInitialNickname] = useState<string>("");
 	const [nicknameCheckState, setNicknameCheckState] = useState<boolean>(false);
 	const [limitNicknameText, setLimitNicknameText] = useState<string>("");
 	const [imageObject, setImageObject] = useState<any>({
@@ -41,10 +40,7 @@ function MyPage() {
 			await checkNickname(apiToken, nicknameText)
 				.then((res) => {
 					// API 변경 요청 -> response에 닉네임 담아서, 이유는 기존 닉네임 중복 체크 시 로직 까다롭지않게
-					if (res.status === 401) {
-						setIsLogged(false);
-						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-					} else if (res.data.response.result) {
+					if (res.data.response.result) {
 						alert("사용가능한 닉네임입니다.");
 						setNicknameCheckState(res.data.response.result);
 					} else {
@@ -52,9 +48,17 @@ function MyPage() {
 						setNicknameCheckState(res.data.response.result);
 					}
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					if (err.response.status === 401) {
+						setIsLogged(false);
+						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
+					} else {
+						console.log(err);
+					}
+				});
 		};
-		getCheckNickname();
+		if (nicknameText === initialNickname) alert("닉네임을 변경해주세요.");
+		else getCheckNickname();
 	};
 	const limitNickname = (name: string) => {
 		let status = "";
@@ -114,19 +118,20 @@ function MyPage() {
 		(async () => {
 			await getMyProfile(apiToken)
 				.then((res) => {
-					if (res.status === 401) {
-						setIsLogged(false);
-						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-					} else {
-						const nicknameTemp = res.data.response.nickname;
-						const UrlTemp = res.data.response.profile_image;
-						setNicknameText(nicknameTemp);
-						limitNickname(nicknameTemp);
-						setPreviewImage(UrlTemp);
-						setImageObject({ ...imageObject, fileName: UrlTemp });
-					}
+					const nicknameTemp = res.data.response.nickname;
+					const UrlTemp = res.data.response.profile_image;
+					// 초기 닉네임, 닉네임 input 셋팅
+					setInitialNickname(nicknameTemp);
+					setNicknameText(nicknameTemp);
+					// 이미지 URL 셋팅
+					setPreviewImage(UrlTemp);
+					setImageObject({ ...imageObject, fileName: UrlTemp });
 				})
 				.catch((err) => {
+					if (err.response.status === 401) {
+						setIsLogged(false);
+						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
+					}
 					console.log(err);
 				});
 		})();
