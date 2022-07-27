@@ -1,6 +1,6 @@
 import axiosInstance from "Utils/axiosInstance";
 
-export const getLogin = (accessToken: string) => {
+export const getLogin = (accessToken: string | null) => {
 	return axiosInstance.post("/api/auth/login", { access_token: accessToken });
 };
 
