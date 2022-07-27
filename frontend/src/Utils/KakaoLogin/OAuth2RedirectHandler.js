@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { isLoggedState } from "stores/Auth";
 import { getLogin } from "apis/auth";
 import { getMyProfile, join } from "apis/user";
+import ReactLoading from "react-loading";
 import { KAKAO_AUTH_TOKEN_URL } from "./OAuth";
 import { KAKAO_ACCESS_TOKEN, API_TOKEN } from "../localStorageKeys";
 
@@ -80,7 +81,19 @@ function OAuth2RedirectHandler() {
 		getToken();
 	}, []);
 
-	return <div style={{ display: "hidden" }} />;
+	return (
+		<div
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				width: "100wh",
+				height: "90vh",
+			}}
+		>
+			<ReactLoading type="spin" width="5%" />
+		</div>
+	);
 }
 
 export default OAuth2RedirectHandler;
