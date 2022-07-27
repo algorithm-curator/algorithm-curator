@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export const Container = styled.div`
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 `;
 
 export const Button = styled(Link)`
@@ -15,4 +16,13 @@ export const Button = styled(Link)`
 	:hover {
 		text-decoration: underline;
 	}
+`;
+
+export const LogoutButton = styled.a`
+	background-color: black;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+	padding: 0.8rem 1rem;
+	cursor: pointer;
 `;

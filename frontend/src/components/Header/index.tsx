@@ -14,24 +14,26 @@ function Header() {
 	useEffect(() => {
 		const kakaoToken = localStorage.getItem(KAKAO_ACCESS_TOKEN)!;
 
-		(async () => {
-			await getLogin(kakaoToken)
-				.then((res) => {
-					if (res.status === 401) {
+		if (kakaoToken) {
+			(async () => {
+				await getLogin(kakaoToken)
+					.then((res) => {
 						setIsLogged(false);
 						localStorage.removeItem(KAKAO_ACCESS_TOKEN);
 						localStorage.removeItem(API_TOKEN);
-					} else if (res.status === 200) {
-						localStorage.setItem(API_TOKEN, res.data.response.api_token);
-						setIsLogged(true);
-					}
-				})
-				.catch((err) => {
-					setIsLogged(false);
-					localStorage.removeItem(KAKAO_ACCESS_TOKEN);
-					localStorage.removeItem(API_TOKEN);
-				});
-		})();
+					})
+					.catch((err) => {
+						if (err.response.status === 401) {
+							alert("토큰이 만료되었습니다. 다시 로그인해주세요.");
+							setIsLogged(false);
+							localStorage.removeItem(KAKAO_ACCESS_TOKEN);
+							localStorage.removeItem(API_TOKEN);
+						} else {
+							console.log(err);
+						}
+					});
+			})();
+		}
 	}, []);
 
 	return (
