@@ -3,32 +3,23 @@
 import React, { useState } from "react";
 import { Container, ProblemNav, Status } from "./styles";
 
-function ProblemAllList() {
-	const [problemStatus, setProblemStatus] = useState("전체 목록");
-
+function ProblemAllList({ setFilterStatus, getProblems }: any) {
 	const onClickStatus = (e: any) => {
-		setProblemStatus(e.target.innerHTML);
+		console.log(e.target.value);
+		setFilterStatus(e.target.value);
+		getProblems(null, e.target.value === 0 ? null : e.target.value);
 	};
 
 	return (
 		<Container>
 			<ProblemNav>
-				<Status
-					onClick={onClickStatus}
-					// isSelected={problemStatus === "전체 목록"}
-				>
+				<Status onClick={onClickStatus} value={0}>
 					전체 목록
 				</Status>
-				<Status
-					onClick={onClickStatus}
-					// isSelected={problemStatus === "풀이 미완료"}
-				>
+				<Status onClick={onClickStatus} value={1}>
 					풀이 미완료
 				</Status>
-				<Status
-					onClick={onClickStatus}
-					// isSelected={problemStatus === "풀이 완료"}
-				>
+				<Status onClick={onClickStatus} value={2}>
 					풀이 완료
 				</Status>
 			</ProblemNav>

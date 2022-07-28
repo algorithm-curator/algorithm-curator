@@ -7,17 +7,19 @@ import {
 	Level,
 } from "./styles";
 
-function index() {
+function index({ problemInfo }: any) {
 	return (
 		<Container>
-			<Title>[백준] 문제 제목</Title>
+			<Title>
+				[{problemInfo.quiz_platform}] {problemInfo.title}
+			</Title>
 			<SolveLevelWrapper>
 				<SolveStatus>
 					<option>선택하지 않음</option>
 					<option>미완료</option>
 					<option>완료</option>
 				</SolveStatus>
-				<Level>level 1</Level>
+				<Level>{problemInfo.quiz_level}</Level>
 			</SolveLevelWrapper>
 		</Container>
 	);

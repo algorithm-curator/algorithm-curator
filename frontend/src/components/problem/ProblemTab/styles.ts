@@ -9,7 +9,7 @@ export const Container = styled.div`
 	padding: 0.7rem;
 	border-radius: 3rem;
 	width: 70%;
-	margin: auto;
+	margin: 1rem auto;
 `;
 
 export const Title = styled.h2`
@@ -20,6 +20,7 @@ export const Title = styled.h2`
 
 export const SolveLevelWrapper = styled.div`
 	display: flex;
+	width: 25%;
 `;
 
 export const SolveStatus = styled.select`
