@@ -1,5 +1,6 @@
-import { getLogout } from "apis/auth";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { getLogout } from "apis/auth";
 import { isLoggedState } from "stores/Auth";
 import { useRecoilState } from "recoil";
 import { API_TOKEN, KAKAO_ACCESS_TOKEN } from "Utils/localStorageKeys";
@@ -7,6 +8,7 @@ import { Container, Button, LogoutButton } from "./styles";
 
 function LogOn() {
 	const [isLogged, setIsLogged] = useRecoilState(isLoggedState);
+	const navigate = useNavigate();
 
 	const onClickLogout = () => {
 		(async () => {
@@ -18,6 +20,7 @@ function LogOn() {
 						localStorage.removeItem(KAKAO_ACCESS_TOKEN);
 						localStorage.removeItem(API_TOKEN);
 						setIsLogged(false);
+						navigate("/");
 					}
 				})
 				.catch((err) => {
@@ -26,6 +29,7 @@ function LogOn() {
 						setIsLogged(false);
 						localStorage.removeItem(API_TOKEN);
 						localStorage.removeItem(KAKAO_ACCESS_TOKEN);
+						navigate("/");
 					}
 				});
 		})();
