@@ -1,31 +1,31 @@
 version: "3"
 
 services:
-  frontend:
-    container_name: apc-frontend-blue
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3000"
-    # 볼륨 설정
-    volumes:
-      - /app/node_modules
-      - ./frontend:/app
-    stdin_open: true
+#  frontend:
+#    container_name: apc-frontend-blue
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3001:3000"
+#    # 볼륨 설정
+#    volumes:
+#      - /app/node_modules
+#      - ./frontend:/app
+#    stdin_open: true
   backend-api:
     container_name: apc-backend-api-blue
     build:
-      context: ./backend
+      context: ./backend/module-api
       dockerfile: Dockerfile
     ports:
       - "8081:8080"
-    env_file: ./.env
+    env_file: .env
   backend-log:
     container_name: apc-backend-log-blue
     build:
-      context: ./backend
+      context: ./backend/module-log
       dockerfile: Dockerfile
     ports:
       - "9081:9080"
-    env_file: ./.env
+    env_file: .env
