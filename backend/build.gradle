@@ -1,33 +1,68 @@
-plugins {
-    id 'org.springframework.boot' version '2.6.9'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-}
-
-group = 'com.ac'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+buildscript {
+    // ext를 통해 build.gradle에서 사용하는 전역변수를 설정
+    ext {
+        springBootVersion = '2.6.9'
+        dependencyManagementVersion = '1.0.11.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
     }
 }
 
-repositories {
-    mavenCentral()
+subprojects {
+    group 'com.ac'    // 하위 모듈을 같은 group 단위로 관리 (ComponentScan에서 사용)
+    version '1.0'
+
+    // 적용하려는 플러그인은 아래와 같이 적용
+    apply plugin: 'java'
+    apply plugin: 'java-library'    // for gradle api, implementation build method
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 11
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 프로젝트 개발에 공통으로 필요한 의존성 선언
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation("com.google.guava:guava:31.1-jre")
+        implementation group: 'org.apache.commons', name: 'commons-lang3'
+        implementation 'org.springframework.kafka:spring-kafka'
+
+        implementation platform('software.amazon.awssdk:bom:2.17.204')
+        implementation 'software.amazon.awssdk:s3'
+        implementation 'com.auth0:java-jwt:3.19.0'
+        implementation 'commons-io:commons-io:2.11.0'
+
+        compileOnly 'org.projectlombok:lombok'
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'mysql:mysql-connector-java'
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+project(':module-api') {
+    dependencies {
+        api project(':module-common')
+    }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+project(':module-log') {
+    dependencies {
+        api project(':module-common')
+    }
 }
