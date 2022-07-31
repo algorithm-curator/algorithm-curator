@@ -31,7 +31,7 @@ export const SolveStatus = styled.select`
 `;
 
 export const Level = styled.div`
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	background-color: #6fcf97;
 	margin: 0 2rem;
 	padding: 0.5rem 1rem;

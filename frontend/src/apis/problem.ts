@@ -35,6 +35,16 @@ export const putProblemStatus = (
 	);
 };
 
+export const putProblemsStatus = (apiKey: string | null, problems: any) => {
+	return axiosInstance.put(
+		"/api/problems/",
+		{ problems },
+		{
+			headers: { api_key: `Bearer ${apiKey}` },
+		}
+	);
+};
+
 export const deleteProblems = (apiKey: string | null, id: number | null) => {
 	axiosInstance.delete(`/api/problems/${id}`, {
 		headers: { api_key: `Bearer ${apiKey}` },
