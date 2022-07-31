@@ -1,13 +1,9 @@
 import React from "react";
 import { Container, Title, SolveLevelWrapper, Level, Origin } from "./styles";
 
-type ProblemListTabProps = {
-	onClick: (e: any) => void;
-};
-
-function ProblemListTab({ onClick }: ProblemListTabProps) {
+function ProblemListTab() {
 	return (
-		<Container onClick={onClick}>
+		<Container>
 			<Title>[백준] 문제 제목</Title>
 			<SolveLevelWrapper>
 				<Level>level 1</Level>

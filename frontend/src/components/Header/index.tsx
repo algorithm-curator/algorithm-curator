@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { isLoggedState } from "stores/Auth";
 import { useRecoilState } from "recoil";
