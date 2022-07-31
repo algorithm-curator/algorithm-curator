@@ -18,9 +18,8 @@ function Header() {
 			(async () => {
 				await getLogin(kakaoToken)
 					.then((res) => {
-						setIsLogged(false);
-						localStorage.removeItem(KAKAO_ACCESS_TOKEN);
-						localStorage.removeItem(API_TOKEN);
+						setIsLogged(true);
+						localStorage.setItem(API_TOKEN, res.data.response.api_token);
 					})
 					.catch((err) => {
 						if (err.response.status === 401) {
