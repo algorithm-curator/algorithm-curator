@@ -12,7 +12,8 @@ spring:
     consumer:
       group-id: quizlog
       auto-offset-reset: latest
-
+      user-name: local
+      password: local
 
 server:
   port: 9080
