@@ -57,7 +57,6 @@ public class KafkaConsumerConfig {
     }
 
     private Map<String, Object> consumerConfigs() {
-        log.warn("SASL_JAAS_CONFIG: userName: {}, password: {}", userName, password);
         Map<String, Object> configs = new HashMap<>();
         configs.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configs.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
