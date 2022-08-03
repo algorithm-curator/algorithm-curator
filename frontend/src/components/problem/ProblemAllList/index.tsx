@@ -7,7 +7,7 @@ function ProblemAllList({ setFilterStatus, getProblems }: any) {
 	const onClickStatus = (e: any) => {
 		console.log(e.target.value);
 		setFilterStatus(e.target.value);
-		getProblems(null, e.target.value === 0 ? null : e.target.value);
+		getProblems(null, e.target.value === 0 ? null : e.target.value, true);
 	};
 
 	return (

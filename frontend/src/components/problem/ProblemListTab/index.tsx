@@ -28,13 +28,13 @@ function ProblemListTab({ problemInfo, getProblems, filterStatus }: any) {
 			if (statusTemp === 3) {
 				(async () => {
 					await deleteProblems(apiToken, problemInfo.id);
-					getProblems(false, filterStatus);
+					getProblems(false, filterStatus, false);
 				})();
 			} else {
 				(async () => {
 					await putProblemStatus(apiToken, problemInfo.id, statusTemp)
 						.then((res) => {
-							getProblems(false, filterStatus);
+							getProblems(false, filterStatus, false);
 						})
 						.catch((err) => {
 							console.log(err);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ReactLoading from "react-loading";
 import ProblemAllList from "components/problem/ProblemAllList";
 import ProblemListTab from "components/problem/ProblemListTab";
@@ -9,23 +9,58 @@ import { ChartLink, Container, Title, TitleChartWrapper } from "./styles";
 function ProblemList() {
 	const apiToken = localStorage.getItem(API_TOKEN);
 	const [problems, setProblems] = useState<any[]>();
-	const [page, setPage] = useState<number>(0);
+	const [page, setPage] = useState<number>(1);
 	const [filterStatus, setFilterStatus] = useState<number | null>(null);
-	const getProblems = async (paging: boolean, state: number | null) => {
+	const boxRef = useRef(null);
+	const observerRef = React.useRef<IntersectionObserver>();
+	const getProblems = async (
+		paging: boolean,
+		state: number | null,
+		stateChange: boolean
+	) => {
+		console.log(
+			"paging :",
+			paging,
+			"| state :",
+			state,
+			"| stateChange :",
+			stateChange
+		);
 		// paging이 true면 페이징 하기
-		await getListProblems(apiToken, state, page)
+		if (stateChange) setPage(1);
+		// eslint-disable-next-line no-nested-ternary
+		await getListProblems(apiToken, state, stateChange ? 0 : paging ? page : 0)
 			.then((res) => {
-				setProblems(res.data.response);
-				if (paging) setPage(page + 1);
+				if (paging) {
+					setPage(page + 1);
+					setProblems([...problems!, ...res.data.response]);
+				} else {
+					setProblems(res.data.response);
+				}
 			})
 			.catch((err) => {
 				alert("에러가 발생했습니다.");
 				// console.log(err);
 			});
 	};
+	const intersectionObserver = (entries: any, io: any) => {
+		entries.forEach((entry: any) => {
+			if (entry.isIntersecting) {
+				// 관찰하고 있는 entry가 화면에 보여지는 경우
+				io.unobserve(entry.target); // entry 관찰 해제
+				getProblems(true, filterStatus, false); // 데이터 가져오기
+			}
+		});
+	};
 	useEffect(() => {
-		getProblems(false, null);
+		getProblems(false, null, false);
 	}, []);
+
+	useEffect(() => {
+		observerRef.current = new IntersectionObserver(intersectionObserver);
+		// eslint-disable-next-line no-unused-expressions
+		boxRef.current && observerRef.current.observe(boxRef.current);
+	}, [problems]);
 
 	return (
 		<Container>
@@ -38,9 +73,10 @@ function ProblemList() {
 				getProblems={getProblems}
 			/>
 			{problems ? (
-				problems.map((problem: any) => {
+				problems.map((problem: any, index) => {
 					return (
 						<ProblemListTab
+							key={problem.id}
 							problemInfo={problem}
 							getProblems={getProblems}
 							filterStatus={filterStatus}
@@ -60,6 +96,7 @@ function ProblemList() {
 					<ReactLoading type="spin" width="5%" />
 				</div>
 			)}
+			{problems ? <div ref={boxRef} /> : null}
 		</Container>
 	);
 }
