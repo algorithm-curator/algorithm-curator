@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from "react";
 import { getTodayProblems, putProblemsStatus } from "apis/problem";
 import ProblemTab from "components/problem/ProblemTab";
 import ProblemDraw from "components/problem/ProblemDraw";

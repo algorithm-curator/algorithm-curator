@@ -35,7 +35,7 @@ export const putProblemStatus = (
 	);
 };
 
-export const putProblemsStatus = (apiKey: string | null, problems: any) => {
+export const putProblemsStatus = (apiKey: string | null, problems: unknown) => {
 	return axiosInstance.put(
 		"/api/problems/",
 		{ problems },
