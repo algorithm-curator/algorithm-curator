@@ -21,6 +21,8 @@ services:
     ports:
       - "8082:8080"
     env_file: ./backend/.env
+    volumes:
+      - /tmp/log:/app/log
   backend-log:
     container_name: apc-backend-log-green
     build:
@@ -29,3 +31,5 @@ services:
     ports:
       - "9082:9080"
     env_file: ./backend/.env
+    volumes:
+      - /tmp/log:/app/log
