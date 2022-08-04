@@ -1,6 +1,5 @@
 {
   "name": "frontend",
-  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -66,5 +65,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-react": "^0.0.4",
     "prettier": "^2.7.1"
-  }
+  },
+  "proxy": "https://apcurator.net"
 }
