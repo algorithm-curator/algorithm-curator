@@ -16,16 +16,16 @@ services:
   backend-api:
     container_name: apc-backend-api-green
     build:
-      context: ./backend
+      context: ./backend/module-api
       dockerfile: Dockerfile
     ports:
       - "8082:8080"
-    env_file: ./.env
+    env_file: ./backend/.env
   backend-log:
     container_name: apc-backend-log-green
     build:
-      context: ./backend
+      context: ./backend/module-log
       dockerfile: Dockerfile
     ports:
       - "9082:9080"
-    env_file: ./.env
+    env_file: ./backend/.env

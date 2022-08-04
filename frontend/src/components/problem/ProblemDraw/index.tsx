@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Title, DrawText, DrawButton, DrawWrapper } from "./styles";
 
-function ProblemDraw() {
+function ProblemDraw({ drawProblems }: any) {
 	return (
 		<Container>
-			<Title>~ 문제</Title>
+			<Title>3문제</Title>
 			<DrawWrapper>
-				<DrawText>한번 더!</DrawText>
-				<DrawButton>🔘</DrawButton>
+				<DrawText>문제뽑기!</DrawText>
+				<DrawButton onClick={drawProblems}>🔘</DrawButton>
 			</DrawWrapper>
 		</Container>
 	);

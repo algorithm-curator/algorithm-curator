@@ -11,6 +11,7 @@ import Rank from "pages/Rank";
 import MyChart from "pages/MyChart";
 import MyPage from "pages/MyPage";
 import OAuth2RedirectHandler from "Utils/KakaoLogin/OAuth2RedirectHandler";
+import Test from "pages/Test";
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 					<Route path="/mypage" element={<MyPage />} />
 					{/* prettier-ignore */}
 					<Route path='/oauth/callback/kakao' element={<OAuth2RedirectHandler />} />
+					<Route path="/test" element={<Test />} />
 				</Routes>
 			</BrowserRouter>
 		</RecoilRoot>

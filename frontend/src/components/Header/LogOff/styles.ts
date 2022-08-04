@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
 
 export const Container = styled.div`
 	display: flex;
@@ -10,6 +9,7 @@ export const LoginButton = styled.a`
 	background-color: black;
 	border-radius: 5px;
 	color: white;
+	text-decoration: none;
 	padding: 0.8rem 1rem;
 	cursor: pointer;
 `;
