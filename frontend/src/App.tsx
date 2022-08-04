@@ -26,7 +26,7 @@ function App() {
 					<Route path="/rank" element={<Rank />} />
 					<Route path="/mypage" element={<MyPage />} />
 					{/* prettier-ignore */}
-					<Route path='/oauth/callback/kakao' element={<OAuth2RedirectHandler />} />
+					<Route path="/oauth/callback/kakao" element={<OAuth2RedirectHandler />} />
 					<Route path="/test" element={<Test />} />
 				</Routes>
 			</BrowserRouter>
