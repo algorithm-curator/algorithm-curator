@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { deleteProblems, putProblemStatus } from "apis/problem";
 import React, { useState } from "react";
 import { API_TOKEN } from "Utils/localStorageKeys";
