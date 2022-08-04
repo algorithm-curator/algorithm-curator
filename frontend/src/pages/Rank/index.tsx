@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { API_TOKEN } from "Utils/localStorageKeys";
+import { getRankings } from "apis/rankings";
+import axios from "axios";
 import {
 	Container,
 	Title,
@@ -9,6 +12,20 @@ import {
 } from "./styles";
 
 function Rank() {
+	const apiToken = localStorage.getItem(API_TOKEN);
+	const [page, setPage] = useState(0);
+	useEffect(() => {
+		(async () => {
+			await getRankings(apiToken, page)
+				.then((res) => {
+					console.log(res);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		})();
+	}, []);
+
 	return (
 		<Container>
 			<Title>랭킹</Title>
