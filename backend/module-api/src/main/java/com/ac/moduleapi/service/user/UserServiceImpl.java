@@ -5,11 +5,11 @@ import com.ac.modulecommon.exception.ApiException;
 import com.ac.modulecommon.repository.user.UserRepository;
 import com.ac.modulecommon.util.UploadUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("png, jpeg, jpg에 해당하는 파일만 업로드할 수 있습니다.");
         }
 
-        String randomProfileImageUrl = UUID.randomUUID() + profileImage;
+        String profileImageUrl = toProfileImageUrl(id, profileImage);
 
         User user = getUser(id);
 
@@ -95,8 +95,14 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
 
-        user.update(nickname, randomProfileImageUrl);
+        user.update(nickname, profileImageUrl);
         return user.getId();
+    }
+
+    private String toProfileImageUrl(Long id, String profileImage) {
+        String extension = FilenameUtils.getExtension(profileImage.toLowerCase());
+        String profileImageUrl = id + "/" + "profile_image" + "." + extension;
+        return profileImageUrl;
     }
 
     private boolean isValidNicknameRequest(User user, String nickname) {
