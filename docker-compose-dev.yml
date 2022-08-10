@@ -41,7 +41,7 @@ services:
       context: ./backend
       dockerfile: ./module-log/Dockerfile.dev
     ports:
-      - "9080:9080"
+      - "8880:8880"
     depends_on:
       - kafka
     env_file:

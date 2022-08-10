@@ -29,7 +29,7 @@ services:
       context: ./backend/module-log
       dockerfile: Dockerfile
     ports:
-      - "9082:9080"
+      - "8882:8880"
     env_file: ./backend/.env
     volumes:
       - /tmp/log:/app/log

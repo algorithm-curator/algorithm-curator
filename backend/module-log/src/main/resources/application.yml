@@ -16,7 +16,7 @@ spring:
       password: local
 
 server:
-  port: 9080
+  port: 8880
 
 management:
   endpoints:
