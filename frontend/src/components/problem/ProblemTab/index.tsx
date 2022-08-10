@@ -12,9 +12,10 @@ function index({ problemInfo, setStatus, index }: any) {
 	const onChangeSolveStatus = (e: any) => {
 		setStatus(index, e.target.value);
 	};
+	console.log(problemInfo);
 	return (
 		<Container>
-			<Title>
+			<Title href={problemInfo.quiz_url} target="_blank">
 				[{problemInfo.quiz_platform}] {problemInfo.title}
 			</Title>
 			<SolveLevelWrapper>
