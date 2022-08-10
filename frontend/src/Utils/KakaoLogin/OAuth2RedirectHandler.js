@@ -58,18 +58,17 @@ function OAuth2RedirectHandler() {
 							})
 							// 로그인 실패시 회원가입하고 로그인
 							.catch((err) => {
-								if (err.data.status === 401) {
-									const getJoin = async () => {
-										await join(res.data.access_token)
-											.then((res) => {
-												navigate("/mypage");
-											})
-											.catch((err) => {
-												console.log(err);
-											});
-									};
-									getJoin();
-								}
+								const getJoin = async () => {
+									await join(res.data.access_token)
+										.then((res) => {
+											navigate("/mypage");
+											console.log(res);
+										})
+										.catch((err) => {
+											console.log(err);
+										});
+								};
+								getJoin();
 							});
 					};
 					tryLogin();
