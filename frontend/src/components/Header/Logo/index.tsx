@@ -2,7 +2,7 @@ import React from "react";
 import { LogoText } from "./styles";
 
 function Logo() {
-	return <LogoText to="/">ALGOL</LogoText>;
+	return <LogoText to="/">APC</LogoText>;
 }
 
 export default Logo;
