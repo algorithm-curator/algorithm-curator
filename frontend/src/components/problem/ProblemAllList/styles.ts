@@ -21,4 +21,7 @@ export const Status = styled.li`
 	width: max-content;
 	margin: 1rem;
 	cursor: pointer;
+	:hover {
+		text-decoration: underline;
+	}
 `;
