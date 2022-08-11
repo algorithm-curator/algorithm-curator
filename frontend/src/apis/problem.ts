@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosInstance from "Utils/axiosInstance";
 
 export const getTodayProblems = (apiKey: string | null) => {
