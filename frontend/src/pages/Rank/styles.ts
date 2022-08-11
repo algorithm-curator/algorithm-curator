@@ -36,19 +36,14 @@ export const Menu = styled.th`
 	width: 30%;
 `;
 
-export const UserInfoWrapper = styled.tr`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-evenly;
-	background-color: #c4c4c4;
-	padding: 1rem;
-	border-radius: 3rem;
-`;
-
-export const UserInfo = styled.td`
-	font-size: 1.3rem;
-	font-weight: 500;
+export const MoreButton = styled.td`
+	width: 10%;
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	background-color: #4d4acf;
+	color: white;
+	cursor: pointer;
+	border: none;
+	border-radius: 1rem;
 	text-align: center;
-	width: 30%;
 `;

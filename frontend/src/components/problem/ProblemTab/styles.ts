@@ -12,10 +12,15 @@ export const Container = styled.div`
 	margin: 1rem auto;
 `;
 
-export const Title = styled.h2`
+export const Title = styled.a`
 	margin-left: 2rem;
 	font-size: 2rem;
 	font-weight: 600;
+	color: black;
+	text-decoration: none;
+	:hover {
+		text-decoration: underline;
+	}
 `;
 
 export const SolveLevelWrapper = styled.div`

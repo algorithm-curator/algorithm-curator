@@ -57,8 +57,10 @@ function MyPage() {
 					}
 				});
 		};
-		if (nicknameText === initialNickname) alert("닉네임을 변경해주세요.");
-		else getCheckNickname();
+		if (nicknameText === initialNickname) {
+			alert("같은 닉네임입니다.");
+			setNicknameCheckState(true);
+		} else getCheckNickname();
 	};
 	const limitNickname = (name: string) => {
 		let status = "";
@@ -84,25 +86,29 @@ function MyPage() {
 		reader.readAsDataURL(file);
 	};
 	const onClickEditSubmit = () => {
+		console.log(imageObject);
 		if (nicknameCheckState && !limitNickname(nicknameText)) {
 			const tryPutMyProfile = async () => {
-				await putMyProfile(apiToken, nicknameText, imageObject.fileName)
+				await putMyProfile(
+					apiToken,
+					nicknameText,
+					imageObject.fileName.includes("amazonaws.com")
+						? `${imageObject.fileName}.png`
+						: imageObject.fileName
+				)
 					.then((res) => {
 						// 헤더 상태변경하면됨
-						if (res.status === 401) {
-							setIsLogged(false);
-							alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-						} else {
+						if (imageObject.fileName && imageObject.file) {
 							axios
 								.put(res.data.response.profile_image, imageObject.file)
 								.then((res) => {
 									if (res.status === 200) {
-										alert("프로필이 수정되었습니다.");
 										setIsLogged(true);
 									}
 								})
 								.catch((err) => console.log(err));
 						}
+						alert("프로필이 수정되었습니다.");
 					})
 					.catch((err) => {
 						console.log(err);

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
+	justify-items: center;
 	margin: 7rem auto;
 	background-color: #e0e0e0;
 	width: 90%;
@@ -30,4 +31,15 @@ export const ChartLink = styled(Link)`
 	color: black;
 	font-weight: 500;
 	font-size: 1.3rem;
+`;
+
+export const MoreButton = styled.button`
+	width: 10%;
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	background-color: #4d4acf;
+	color: white;
+	cursor: pointer;
+	border: none;
+	border-radius: 1rem;
 `;
