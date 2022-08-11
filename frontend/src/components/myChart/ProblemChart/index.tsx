@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
