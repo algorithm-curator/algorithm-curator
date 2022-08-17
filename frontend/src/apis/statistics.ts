@@ -12,8 +12,11 @@ export const getSolvedRate = (apiKey: string | null) => {
 	});
 };
 
-export const getSolvedTrace = (apiKey: string | null, date: string | null) => {
-	return axiosInstance.get(`/api/statistics/solved-trace?date=${date}`, {
-		headers: { api_key: `Bearer ${apiKey}` },
-	});
+export const getSolvedTrace = (apiKey: string | null, date?: string | null) => {
+	return axiosInstance.get(
+		`/api/statistics/solved-trace${date ? `?date=${date}` : ""}`,
+		{
+			headers: { api_key: `Bearer ${apiKey}` },
+		}
+	);
 };

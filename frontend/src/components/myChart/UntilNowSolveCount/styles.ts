@@ -5,6 +5,9 @@ export const Container = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	.highlight {
+		background: #26a641;
+	}
 `;
 
 export const Text = styled.div`
