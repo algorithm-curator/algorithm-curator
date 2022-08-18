@@ -13,13 +13,22 @@ function UntilNowSolveCount() {
 	const [value, onChange] = useState(new Date());
 	const [solvedCount, setSolvedCount] = useState<number>(0);
 	const [marks, setMarks] = useState<string[]>([]);
+	const [firstDate, setFirstDate] = useState<any>("");
+	const [activeDate, setActiveDate] = useState<any>("");
+	const dateDiff = (): string | null => {
+		const tempFirst = moment(moment(firstDate).format("YYYY-MM"));
+		const tempActive = moment(moment(activeDate).format("YYYY-MM"));
+		if (tempFirst.diff(tempActive, "months") <= -1) {
+			return "<";
+		}
+		return null;
+	};
 
 	useEffect(() => {
 		(async () => {
 			await getSolvedRate(apiToken)
 				.then((res) => {
 					setSolvedCount(res.data.response.solved_count);
-					console.log(res.data.response);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -30,9 +39,10 @@ function UntilNowSolveCount() {
 				.then((res) => {
 					const tempDates: any[] = [];
 					res.data.response.solved_states.forEach((info: any) => {
-						tempDates.push(info.date);
+						if (info.state === 1) tempDates.push(info.date);
 					});
 					setMarks([...tempDates]);
+					setFirstDate(moment(res.data.response.first_time).format());
 				})
 				.catch((err) => {
 					alert("트레이스를 가져오는데 문제가 생겼습니다.");
@@ -50,6 +60,7 @@ function UntilNowSolveCount() {
 				value={value}
 				minDetail="month"
 				maxDetail="month"
+				prevLabel={dateDiff()}
 				prev2Label={null}
 				next2Label={null}
 				tileClassName={({ date, view }) => {
@@ -60,12 +71,13 @@ function UntilNowSolveCount() {
 				}}
 				onActiveStartDateChange={({ activeStartDate }) => {
 					const date = moment(activeStartDate).format("YYYY-MM-DD");
+					setActiveDate(moment(activeStartDate).format());
 					(async () => {
 						await getSolvedTrace(apiToken, date)
 							.then((res) => {
 								const tempDates: any[] = [];
 								res.data.response.solved_states.forEach((info: any) => {
-									tempDates.push(info.date);
+									if (info.state === 1) tempDates.push(info.date);
 								});
 								setMarks([...tempDates]);
 							})
