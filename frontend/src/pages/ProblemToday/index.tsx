@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { getTodayProblems, putProblemsStatus } from "apis/problem";
@@ -42,7 +43,6 @@ function ProblemToday() {
 			(async () => {
 				await putProblemsStatus(apiToken, problems)
 					.then((res) => {
-						console.log(res);
 						alert("수정되었습니다.");
 					})
 					.catch((err) => {

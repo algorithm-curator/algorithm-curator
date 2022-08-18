@@ -12,7 +12,6 @@ function index({ problemInfo, setStatus, index }: any) {
 	const onChangeSolveStatus = (e: any) => {
 		setStatus(index, e.target.value);
 	};
-	console.log(problemInfo);
 	return (
 		<Container>
 			<Title href={problemInfo.quiz_url} target="_blank">
