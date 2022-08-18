@@ -36,35 +36,39 @@ function Rank() {
 	return (
 		<Container>
 			<Title>랭킹</Title>
-			<MenuWrapper>
-				<Menu>순위</Menu>
-				<Menu>닉네임</Menu>
-				<Menu>푼 문제</Menu>
-			</MenuWrapper>
-			{rankInfos
-				? rankInfos.map((rankInfo, index) => {
-						return (
-							<UserRank
-								key={rankInfo.id}
-								rankInfo={rankInfo}
-								ranking={index + 1}
-							/>
-						);
-				  })
-				: null}
-			<tr
-				style={{
-					width: "100%",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					marginTop: "1rem",
-				}}
-			>
-				{rankInfos ? (
-					<MoreButton onClick={onClickMore}>더보기</MoreButton>
-				) : null}
-			</tr>
+			<thead>
+				<MenuWrapper>
+					<Menu>순위</Menu>
+					<Menu>닉네임</Menu>
+					<Menu>푼 문제</Menu>
+				</MenuWrapper>
+			</thead>
+			<tbody>
+				{rankInfos
+					? rankInfos.map((rankInfo, index) => {
+							return (
+								<UserRank
+									key={rankInfo.id}
+									rankInfo={rankInfo}
+									ranking={index + 1}
+								/>
+							);
+					  })
+					: null}
+				<tr
+					style={{
+						width: "100%",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						marginTop: "1rem",
+					}}
+				>
+					{rankInfos ? (
+						<MoreButton onClick={onClickMore}>더보기</MoreButton>
+					) : null}
+				</tr>
+			</tbody>
 		</Container>
 	);
 }
