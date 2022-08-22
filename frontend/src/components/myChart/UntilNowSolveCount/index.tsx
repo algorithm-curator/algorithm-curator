@@ -37,12 +37,13 @@ function UntilNowSolveCount() {
 		(async () => {
 			await getSolvedTrace(apiToken)
 				.then((res) => {
-					const tempDates: any[] = [];
-					res.data.response.solved_states.forEach((info: any) => {
-						if (info.state === 1) tempDates.push(info.date);
-					});
-					setMarks([...tempDates]);
-					setFirstDate(moment(res.data.response.first_time).format());
+					if (res.data.response?.solved_states) {
+						const tempDates: any[] = [];
+						res.data.response.solved_states.forEach((info: any) => {
+							tempDates.push(info.date);
+						});
+						setMarks([...tempDates]);
+					}
 				})
 				.catch((err) => {
 					alert("트레이스를 가져오는데 문제가 생겼습니다.");

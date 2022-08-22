@@ -51,21 +51,34 @@ function OAuth2RedirectHandler() {
 											}
 										})
 										.catch((err) => {
-											console.log(err);
+											alert("에러가 발생했습니다.");
 										});
 								};
 								myprofile();
 							})
 							// 로그인 실패시 회원가입하고 로그인
 							.catch((err) => {
+								const tryLogin = async () => {
+									await getLogin(res.data.access_token)
+										.then((res) => {
+											localStorage.setItem(
+												API_TOKEN,
+												res.data.response.api_token
+											);
+											setIsLogged(true);
+										})
+										.catch((err) => {
+											alert("에러가 발생했습니다.");
+										});
+								};
 								const getJoin = async () => {
 									await join(res.data.access_token)
 										.then((res) => {
+											tryLogin();
 											navigate("/mypage");
-											console.log(res);
 										})
 										.catch((err) => {
-											console.log(err);
+											alert("에러가 발생했습니다.");
 										});
 								};
 								getJoin();

@@ -27,8 +27,6 @@ function Header() {
 							setIsLogged(false);
 							localStorage.removeItem(KAKAO_ACCESS_TOKEN);
 							localStorage.removeItem(API_TOKEN);
-						} else {
-							console.log(err);
 						}
 					});
 			})();

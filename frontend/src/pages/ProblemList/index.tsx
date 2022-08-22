@@ -13,6 +13,7 @@ import {
 	Title,
 	TitleChartWrapper,
 	MoreButton,
+	ToastMessage,
 } from "./styles";
 
 function ProblemList() {
@@ -20,6 +21,7 @@ function ProblemList() {
 	const [problems, setProblems] = useState<any[]>();
 	const [page, setPage] = useState<number>(1);
 	const [filterStatus, setFilterStatus] = useState<number | null>(null);
+	const [recentProblems, setRecentProblems] = useState<number>(0);
 	const getProblems = async (
 		paging: boolean,
 		state: number | null,
@@ -36,6 +38,7 @@ function ProblemList() {
 				} else {
 					setProblems(res.data.response);
 				}
+				setRecentProblems(res.data.response.length);
 			})
 			.catch((err) => {
 				alert("에러가 발생했습니다.");
@@ -50,7 +53,7 @@ function ProblemList() {
 		<Container>
 			<TitleChartWrapper>
 				<Title>나의 문제 목록</Title>
-				<ChartLink to="/chart">📊차트로 파악하기</ChartLink>
+				<ChartLink to="/mychart">📊차트로 파악하기</ChartLink>
 			</TitleChartWrapper>
 			<ProblemAllList
 				setFilterStatus={setFilterStatus}
@@ -84,6 +87,7 @@ function ProblemList() {
 				style={{
 					width: "100%",
 					display: "flex",
+					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
 					marginTop: "1rem",
@@ -98,6 +102,11 @@ function ProblemList() {
 						더보기
 					</MoreButton>
 				) : null}
+				<div style={{ height: "2rem" }}>
+					{problems && !recentProblems ? (
+						<ToastMessage>가져올 문제가 없습니다.</ToastMessage>
+					) : null}
+				</div>
 			</div>
 		</Container>
 	);

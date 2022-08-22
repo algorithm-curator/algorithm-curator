@@ -42,4 +42,10 @@ export const MoreButton = styled.button`
 	cursor: pointer;
 	border: none;
 	border-radius: 1rem;
+	margin-bottom: 1rem;
+`;
+
+export const ToastMessage = styled.div`
+	color: red;
+	font-size: 0.8rem;
 `;
