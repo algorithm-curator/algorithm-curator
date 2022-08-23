@@ -57,14 +57,19 @@ function MyPage() {
 					}
 				});
 		};
-		if (nicknameText === initialNickname) {
+		if (nicknameText && nicknameText === initialNickname) {
 			alert("같은 닉네임입니다.");
 			setNicknameCheckState(true);
-		} else getCheckNickname();
+		} else if (nicknameText) getCheckNickname();
+		else alert("닉네임을 입력하세요.");
 	};
 	const limitNickname = (name: string) => {
 		let status = "";
-		if (name.length < 3 || name.length > 17) {
+		if (!name) {
+			status = "닉네임을 입력해주세요";
+			return status;
+		}
+		if (name.length < 2 || name.length > 17) {
 			status = "닉네임은 2자 이상 16자 이하로 가능합니다.";
 		} else if (name.search(/\s/) !== -1) {
 			status = "닉네임에 빈 칸을 포함 할 수 없습니다.";
@@ -81,18 +86,16 @@ function MyPage() {
 				fileName: file.name,
 			});
 			setPreviewImage(reader.result);
-			console.log(reader.result, file.name);
 		};
 		reader.readAsDataURL(file);
 	};
 	const onClickEditSubmit = () => {
-		console.log(imageObject);
 		if (nicknameCheckState && !limitNickname(nicknameText)) {
 			const tryPutMyProfile = async () => {
 				await putMyProfile(
 					apiToken,
 					nicknameText,
-					imageObject.fileName.includes("amazonaws.com")
+					imageObject?.fileName?.includes("amazonaws.com")
 						? `${imageObject.fileName}.png`
 						: imageObject.fileName
 				)
@@ -111,7 +114,7 @@ function MyPage() {
 						alert("프로필이 수정되었습니다.");
 					})
 					.catch((err) => {
-						console.log(err);
+						alert("수정에 실패했습니다.");
 					});
 			};
 			tryPutMyProfile();
@@ -129,16 +132,18 @@ function MyPage() {
 					// 초기 닉네임, 닉네임 input 셋팅
 					setInitialNickname(nicknameTemp);
 					setNicknameText(nicknameTemp);
+					setLimitNicknameText(limitNickname(nicknameTemp));
 					// 이미지 URL 셋팅
 					setPreviewImage(UrlTemp);
 					setImageObject({ ...imageObject, fileName: UrlTemp });
 				})
 				.catch((err) => {
-					if (err.response.status === 401) {
+					if (err.status === 401) {
 						setIsLogged(false);
 						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
+					} else {
+						console.log(err);
 					}
-					console.log(err);
 				});
 		})();
 	}, []);

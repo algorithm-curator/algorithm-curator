@@ -47,3 +47,9 @@ export const MoreButton = styled.td`
 	border-radius: 1rem;
 	text-align: center;
 `;
+
+export const ToastMessage = styled.tr`
+	color: red;
+	font-size: 0.8rem;
+	text-align: center;
+`;
