@@ -25,6 +25,7 @@ export const Title = styled.a`
 
 export const SolveLevelWrapper = styled.div`
 	display: flex;
+	height: 2rem;
 `;
 
 export const Level = styled.div`
@@ -48,6 +49,7 @@ export const ChangeStatus = styled.div`
 	background-color: skyblue;
 	margin: 0 1rem;
 	padding: 0.5rem 1rem;
+	border: none;
 	border-radius: 1rem;
 	cursor: pointer;
 	:hover {
