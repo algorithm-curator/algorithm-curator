@@ -126,8 +126,8 @@ function MyPage() {
 		(async () => {
 			await getMyProfile(apiToken)
 				.then((res) => {
-					const nicknameTemp = res.data.response.nickname;
-					const UrlTemp = res.data.response.profile_image;
+					const nicknameTemp = res?.data?.response.nickname;
+					const UrlTemp = res?.data?.response?.profile_image;
 					// 초기 닉네임, 닉네임 input 셋팅
 					setInitialNickname(nicknameTemp);
 					setNicknameText(nicknameTemp);
@@ -140,8 +140,6 @@ function MyPage() {
 					if (err.status === 401) {
 						setIsLogged(false);
 						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-					} else {
-						alert("에러가 발생했습니다.");
 					}
 				});
 		})();

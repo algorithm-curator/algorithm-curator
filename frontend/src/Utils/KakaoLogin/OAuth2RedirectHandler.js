@@ -45,10 +45,8 @@ function OAuth2RedirectHandler() {
 										// 2. 닉네임 있는 경우는 landingPage 이동 -> 기존 있던 페이지로 이동하게 할 필요가 있다.
 										.then((res) => {
 											if (!res.data.response.nickname) navigate("/mypage");
-											else {
-												setIsLogged(true);
-												navigate("/");
-											}
+											else navigate("/");
+											setIsLogged(true);
 										})
 										.catch((err) => {
 											alert("에러가 발생했습니다.");
