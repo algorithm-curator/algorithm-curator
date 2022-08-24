@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { deleteProblems, putProblemStatus } from "apis/problem";
@@ -12,6 +13,7 @@ import {
 	ChangeStatus,
 	StatusSelect,
 	CompleteButton,
+	SolveStatus,
 } from "./styles";
 
 function ProblemListTab({ problemInfo, getProblems, filterStatus }: any) {
@@ -30,16 +32,22 @@ function ProblemListTab({ problemInfo, getProblems, filterStatus }: any) {
 			if (statusTemp === 3) {
 				(async () => {
 					await deleteProblems(apiToken, problemInfo.id);
-					getProblems(false, filterStatus, false);
+					// getProblems(false, filterStatus, true);
+					setTimeout(function () {
+						getProblems(false, filterStatus, true);
+					}, 500);
 				})();
 			} else {
 				(async () => {
 					await putProblemStatus(apiToken, problemInfo.id, statusTemp)
 						.then((res) => {
-							getProblems(false, filterStatus, false);
+							// getProblems(false, filterStatus, true);
+							setTimeout(function () {
+								getProblems(false, filterStatus, true);
+							}, 500);
 						})
 						.catch((err) => {
-							console.log(err);
+							alert("문제를 수정하는데 에러가 발생했습니다.");
 						});
 				})();
 			}
@@ -52,9 +60,16 @@ function ProblemListTab({ problemInfo, getProblems, filterStatus }: any) {
 				[{problemInfo.quiz_platform}] {problemInfo.title}
 			</Title>
 			<SolveLevelWrapper>
+				{problemInfo.solved_state === 2 ? (
+					<SolveStatus>해결</SolveStatus>
+				) : null}
+				<Level>{problemInfo.quiz_level}</Level>
 				{showSelect ? (
 					<div style={{ display: "flex", alignItems: "center" }}>
-						<StatusSelect onChange={onChangeStatus}>
+						<StatusSelect
+							onChange={onChangeStatus}
+							defaultValue={problemInfo.solved_state}
+						>
 							<option value={1}>풀이 미완료</option>
 							<option value={2}>풀이 완료</option>
 							<option value={3}>삭제</option>
@@ -64,8 +79,6 @@ function ProblemListTab({ problemInfo, getProblems, filterStatus }: any) {
 				) : (
 					<ChangeStatus onClick={onClickShow}>문제상태변경</ChangeStatus>
 				)}
-				<Level>{problemInfo.quiz_level}</Level>
-				<Origin>{problemInfo.quiz_platform}</Origin>
 			</SolveLevelWrapper>
 		</Container>
 	);

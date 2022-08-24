@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { API_TOKEN } from "Utils/localStorageKeys";
 import { getSolvedCount } from "apis/statistics";
-import { Container, Text } from "./styles";
+import { Container, Text, ToastMessage } from "./styles";
 
 const data = {
 	labels: ["DP", "Greedy", "DFS", "Recursion", "브루트포스 ", "BFS"],
@@ -62,21 +63,25 @@ function ProblemChart() {
 	const labels: string[] = [];
 	const counts: number[] = [];
 	const [dataLoading, setDataLoading] = useState(false);
+	const [isNull, setIsNull] = useState(false);
 
 	useEffect(() => {
 		(async () => {
 			await getSolvedCount(apiToken)
 				.then((res) => {
+					let countSum = 0;
 					res.data.response.forEach((data: any) => {
 						labels.push(data.type);
 						counts.push(data.count);
+						countSum += data.count;
 					});
 					data.labels = labels;
 					data.datasets[0].data = counts;
 					setDataLoading(true);
+					if (countSum <= 0) setIsNull(true);
 				})
 				.catch((err) => {
-					console.log(err);
+					alert("차트데이터를 가져오는데 문제가 생겼습니다.");
 				});
 		})();
 	}, []);
@@ -85,6 +90,9 @@ function ProblemChart() {
 		<Container>
 			<Text style={{ marginBottom: "2rem" }}>차트로 보기</Text>
 			{dataLoading ? <Doughnut data={data}>Chart</Doughnut> : null}
+			{isNull ? (
+				<ToastMessage>불러올 차트 데이터가 없습니다</ToastMessage>
+			) : null}
 		</Container>
 	);
 }

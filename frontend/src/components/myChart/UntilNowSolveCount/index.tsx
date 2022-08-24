@@ -15,6 +15,7 @@ function UntilNowSolveCount() {
 	const [marks, setMarks] = useState<string[]>([]);
 	const [firstDate, setFirstDate] = useState<any>("");
 	const [activeDate, setActiveDate] = useState<any>("");
+	const [isActive, setIsActive] = useState<boolean>(true);
 	const dateDiff = (): string | null => {
 		const tempFirst = moment(moment(firstDate).format("YYYY-MM"));
 		const tempActive = moment(moment(activeDate).format("YYYY-MM"));
@@ -40,9 +41,14 @@ function UntilNowSolveCount() {
 					if (res.data.response?.solved_states) {
 						const tempDates: any[] = [];
 						res.data.response.solved_states.forEach((info: any) => {
-							tempDates.push(info.date);
+							if (info.state === 1) {
+								tempDates.push(info.date);
+							}
 						});
 						setMarks([...tempDates]);
+						setFirstDate(moment(res.data.response.first_time).format());
+					} else if (res.status === 204) {
+						setIsActive(false);
 					}
 				})
 				.catch((err) => {
@@ -61,7 +67,8 @@ function UntilNowSolveCount() {
 				value={value}
 				minDetail="month"
 				maxDetail="month"
-				prevLabel={dateDiff()}
+				prevLabel={isActive ? dateDiff() : null}
+				nextLabel={isActive ? ">" : null}
 				prev2Label={null}
 				next2Label={null}
 				tileClassName={({ date, view }) => {

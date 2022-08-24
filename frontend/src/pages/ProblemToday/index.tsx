@@ -23,8 +23,11 @@ function ProblemToday() {
 				setSolveStatus([1, 1, 1]);
 			})
 			.catch((err) => {
-				alert("문제를 가져오는데 에러가 발생했습니다.");
-				console.log(err);
+				if (err.response.status === 400 && err?.response.data.error.message) {
+					alert(err?.response.data.error.message);
+				} else {
+					alert("문제를 가져오는데 에러가 발생했습니다.");
+				}
 			});
 	};
 	const setStatus = (index: number, status: number) => {
@@ -46,7 +49,6 @@ function ProblemToday() {
 						alert("수정되었습니다.");
 					})
 					.catch((err) => {
-						console.log(err);
 						alert("에러가 발생했습니다.");
 					});
 			})();

@@ -12,6 +12,7 @@ export const ProblemListTextWrapper = styled.div`
 	flex-direction: row-reverse;
 	align-items: center;
 	width: 70%;
+	min-width: 1150px;
 	margin: 2rem auto;
 `;
 
