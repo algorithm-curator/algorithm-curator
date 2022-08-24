@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -126,22 +127,22 @@ function MyPage() {
 		(async () => {
 			await getMyProfile(apiToken)
 				.then((res) => {
-					const nicknameTemp = res.data.response.nickname;
-					const UrlTemp = res.data.response.profile_image;
+					const nicknameTemp = res?.data?.response.nickname;
+					const UrlTemp = res?.data?.response?.profile_image;
 					// 초기 닉네임, 닉네임 input 셋팅
 					setInitialNickname(nicknameTemp);
 					setNicknameText(nicknameTemp);
-					setLimitNicknameText(limitNickname(nicknameTemp));
 					// 이미지 URL 셋팅
 					setPreviewImage(UrlTemp);
 					setImageObject({ ...imageObject, fileName: UrlTemp });
+					setTimeout(function () {
+						setLimitNicknameText(limitNickname(nicknameTemp));
+					}, 200);
 				})
 				.catch((err) => {
 					if (err.status === 401) {
 						setIsLogged(false);
 						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
-					} else {
-						alert("에러가 발생했습니다.");
 					}
 				});
 		})();
