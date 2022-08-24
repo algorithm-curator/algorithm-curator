@@ -10,3 +10,8 @@ export const Text = styled.div`
 	font-size: 2rem;
 	font-weight: 600;
 `;
+
+export const ToastMessage = styled.div`
+	color: red;
+	font-size: 0.8rem;
+`;

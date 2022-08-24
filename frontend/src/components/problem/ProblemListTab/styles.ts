@@ -13,11 +13,15 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.a`
+	width: 55%;
 	margin-left: 2rem;
-	font-size: 2rem;
+	font-size: 1.7rem;
 	font-weight: 600;
 	color: black;
 	text-decoration: none;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	:hover {
 		text-decoration: underline;
 	}
@@ -75,4 +79,12 @@ export const CompleteButton = styled.button`
 	:hover {
 		font-weight: 600;
 	}
+`;
+
+export const SolveStatus = styled.div`
+	font-size: 1rem;
+	background-color: #ff648f;
+	margin: 0 1rem;
+	padding: 0.5rem 1rem;
+	border-radius: 1rem;
 `;

@@ -7,6 +7,7 @@ export const Container = styled.table`
 	background-color: #e0e0e0;
 	width: 90%;
 	max-width: 1600px;
+	min-width: 1150px;
 	border-radius: 1rem;
 	padding: 2rem;
 `;

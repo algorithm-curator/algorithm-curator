@@ -105,12 +105,11 @@ function MyPage() {
 							axios
 								.put(res.data.response.profile_image, imageObject.file)
 								.then((res) => {
-									if (res.status === 200) {
-										setIsLogged(true);
-									}
+									if (res.status === 200) setIsLogged(true);
 								})
 								.catch((err) => console.log(err));
 						}
+						setInitialNickname(nicknameText);
 						alert("프로필이 수정되었습니다.");
 					})
 					.catch((err) => {
@@ -142,7 +141,7 @@ function MyPage() {
 						setIsLogged(false);
 						alert("로그인 토큰이 만료되었습니다. 다시 로그인 해주세요.");
 					} else {
-						console.log(err);
+						alert("에러가 발생했습니다.");
 					}
 				});
 		})();
@@ -164,6 +163,13 @@ function MyPage() {
 						onChange={(e) => onChangeImage(e)}
 					/>
 				</ProfileImage>
+				<div
+					style={{
+						marginTop: "1rem",
+					}}
+				>
+					현재 닉네임 : {initialNickname}
+				</div>
 				<div>
 					<div
 						style={{
