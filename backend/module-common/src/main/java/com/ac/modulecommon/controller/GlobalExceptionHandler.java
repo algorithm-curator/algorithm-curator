@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ac.modulecommon.controller.ApiResult.ERROR;
+import static com.ac.modulecommon.controller.ApiResult.NO_CONTENT;
+import static com.ac.modulecommon.exception.EnumApiException.NO_CONTENT;
 
 @Slf4j
 @RestControllerAdvice
@@ -40,6 +42,12 @@ public class GlobalExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         return new ResponseEntity<>(ERROR(errorMessage, status, invalidFields), headers, status);
+    }
+
+    private ResponseEntity<ApiResult<?>> createResponseNoContent(HttpStatus status) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        return new ResponseEntity<>(NO_CONTENT(), headers, status);
     }
 
     /**
@@ -97,6 +105,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<?> handleApiException(ApiException e) {
+        if (e.getType() == NO_CONTENT) {
+            return createResponseNoContent(e.getType().getStatus());
+        }
+
         return createResponse(e, e.getType().getStatus());
     }
 
