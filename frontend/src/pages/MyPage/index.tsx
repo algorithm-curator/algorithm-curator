@@ -97,7 +97,7 @@ function MyPage() {
 					apiToken,
 					nicknameText,
 					imageObject?.fileName?.includes("amazonaws.com")
-						? `${imageObject.fileName}.png`
+						? null
 						: imageObject.fileName
 				)
 					.then((res) => {
