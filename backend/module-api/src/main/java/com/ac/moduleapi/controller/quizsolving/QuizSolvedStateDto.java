@@ -47,6 +47,7 @@ public class QuizSolvedStateDto {
         private String quizUrl;
         private String quizLevel;
         private String quizPlatform;
+        private Integer solvedState;
 
         public static GetResponse from(QuizSolvedState quizSolvedState) {
             return GetResponse.builder()
@@ -55,6 +56,7 @@ public class QuizSolvedStateDto {
                     .quizUrl(quizSolvedState.getQuiz().getQuizUrl())
                     .quizLevel(quizSolvedState.getQuiz().getLevel().getState())
                     .quizPlatform(quizSolvedState.getQuiz().getPlatform().getState())
+                    .solvedState(quizSolvedState.getSolvedState().getCode())
                     .build();
         }
     }

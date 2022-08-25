@@ -7,9 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum EnumApiException {
-    NOT_FOUND("error.notfound", "error.notfound.details", HttpStatus.NOT_FOUND),
+    NO_CONTENT("response.no-content", "response.no-content.details", HttpStatus.NO_CONTENT),
+    DUPLICATED_VALUE("error.duplicate","error.duplicate.details", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("error.authority","error.authority.details", HttpStatus.FORBIDDEN),
-    DUPLICATED_VALUE("error.duplicate","error.duplicate.details", HttpStatus.BAD_REQUEST);
+    NOT_FOUND("error.notfound", "error.notfound.details", HttpStatus.NOT_FOUND);
 
     private String messageKey;
     private String messageDetailKey;

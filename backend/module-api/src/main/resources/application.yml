@@ -10,6 +10,8 @@ spring:
   kafka:
     producer:
       retries: 10
+      user-name: local
+      password: local
     topic:
       solved-state-change: v1.solved-state-change.request
   data:
@@ -17,6 +19,9 @@ spring:
       pageable:
         default-page-size: 10
         max-page-size: 10
+  datasource:
+    hikari:
+      maximum-pool-size: 20
 
 oauth:
   kakao:

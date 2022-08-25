@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.ac.modulecommon.exception.EnumApiException.NOT_FOUND;
+import static com.ac.modulecommon.exception.EnumApiException.NO_CONTENT;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toList;
 
@@ -46,7 +46,7 @@ public class QuizLogQueryService {
 
         return quizLogRepository.findFirstByUserId(userId)
                 .orElseThrow(
-                        () -> new ApiException(NOT_FOUND,
+                        () -> new ApiException(NO_CONTENT,
                         QuizLog.class,
                         String.format("userId = %s", userId))
                 )

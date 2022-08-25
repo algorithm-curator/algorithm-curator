@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { isLoggedState } from "stores/Auth";
 import { getLogin } from "apis/auth";
 import { getMyProfile, join } from "apis/user";
+import ReactLoading from "react-loading";
 import { KAKAO_AUTH_TOKEN_URL } from "./OAuth";
 import { KAKAO_ACCESS_TOKEN, API_TOKEN } from "../localStorageKeys";
 
@@ -43,31 +45,41 @@ function OAuth2RedirectHandler() {
 										// 2. 닉네임 있는 경우는 landingPage 이동 -> 기존 있던 페이지로 이동하게 할 필요가 있다.
 										.then((res) => {
 											if (!res.data.response.nickname) navigate("/mypage");
-											else {
-												setIsLogged(true);
-												navigate("/");
-											}
+											else navigate("/");
+											setIsLogged(true);
 										})
 										.catch((err) => {
-											console.log(err);
+											alert("에러가 발생했습니다.");
 										});
 								};
 								myprofile();
 							})
 							// 로그인 실패시 회원가입하고 로그인
 							.catch((err) => {
-								if (err.data.status === 401) {
-									const getJoin = async () => {
-										await join(res.data.access_token)
-											.then((res) => {
-												navigate("/mypage");
-											})
-											.catch((err) => {
-												console.log(err);
-											});
-									};
-									getJoin();
-								}
+								const tryLogin = async () => {
+									await getLogin(res.data.access_token)
+										.then((res) => {
+											localStorage.setItem(
+												API_TOKEN,
+												res.data.response.api_token
+											);
+											setIsLogged(true);
+										})
+										.catch((err) => {
+											alert("에러가 발생했습니다.");
+										});
+								};
+								const getJoin = async () => {
+									await join(res.data.access_token)
+										.then((res) => {
+											tryLogin();
+											navigate("/mypage");
+										})
+										.catch((err) => {
+											alert("에러가 발생했습니다.");
+										});
+								};
+								getJoin();
 							});
 					};
 					tryLogin();
@@ -79,7 +91,19 @@ function OAuth2RedirectHandler() {
 		getToken();
 	}, []);
 
-	return <div style={{ display: "hidden" }} />;
+	return (
+		<div
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				width: "100wh",
+				height: "90vh",
+			}}
+		>
+			<ReactLoading type="spin" width="5%" />
+		</div>
+	);
 }
 
 export default OAuth2RedirectHandler;

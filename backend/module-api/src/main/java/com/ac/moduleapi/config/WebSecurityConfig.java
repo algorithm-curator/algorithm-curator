@@ -22,8 +22,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 /**
  * SpringSecurity, 인증 인가 관련 설정 및 관련 Bean 모음
  */
@@ -79,11 +77,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
+                    .regexMatchers("^/actuator.*").permitAll()
                     .antMatchers("/api/heartbeat").permitAll() // 서버 상태 CHECK API는 모두 접근가능
                     .antMatchers("/api/auth/login").permitAll()   // 로그인 API는 모두 접근가능
                     .antMatchers("/api/users/join").permitAll()  // 회원 가입 API는 모두 접근가능
                     .antMatchers("/api/**").hasRole(Role.USER.name())   // 그 외 API는 '회원 권한' 필요
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             .and()
                 .formLogin()
                 .disable();
@@ -93,10 +92,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CorsConfigurationSource configurationSource() {
-        List<String> clientUrls = List.of("http://localhost:3000");
-
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(clientUrls);
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

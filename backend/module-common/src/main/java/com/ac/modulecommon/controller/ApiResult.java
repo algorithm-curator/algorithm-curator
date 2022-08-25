@@ -26,6 +26,10 @@ public class ApiResult<T> {
         return new ApiResult<>(true, response, null);
     }
 
+    public static ApiResult<?> NO_CONTENT() {
+        return new ApiResult<>(true, null, null);
+    }
+
     public static ApiResult<?> ERROR(Throwable throwable, HttpStatus status) {
         return new ApiResult<>(false, null, ApiError.of(throwable, status));
     }

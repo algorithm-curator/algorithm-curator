@@ -12,10 +12,14 @@ spring:
     consumer:
       group-id: quizlog
       auto-offset-reset: latest
-
+      user-name: local
+      password: local
+  datasource:
+    hikari:
+      maximum-pool-size: 20
 
 server:
-  port: 9080
+  port: 8880
 
 management:
   endpoints:

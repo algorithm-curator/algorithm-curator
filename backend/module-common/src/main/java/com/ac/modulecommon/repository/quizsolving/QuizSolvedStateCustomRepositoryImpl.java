@@ -42,7 +42,7 @@ public class QuizSolvedStateCustomRepositoryImpl implements QuizSolvedStateCusto
                     quizSolvedState.user.id.eq(userId),
                     solvedStateEq(solvedState)
                 )
-                .orderBy(quizSolvedState.updatedAt.desc())
+                .orderBy(quizSolvedState.id.desc())
                     .limit(pageable.getPageSize())
                     .offset(pageable.getOffset())
                 .fetch();

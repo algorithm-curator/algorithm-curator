@@ -19,7 +19,7 @@ import static com.ac.modulecommon.controller.ApiResult.ERROR;
 @Component
 public class CommonAccessDeniedHandler implements AccessDeniedHandler {
 
-    static ApiResult<?> E403 = ERROR("Authority error error (cause: forbidden)", HttpStatus.FORBIDDEN);
+    static ApiResult<?> E403 = ERROR("Authority error (cause: forbidden)", HttpStatus.FORBIDDEN);
 
     private final ObjectMapper objectMapper;
 
