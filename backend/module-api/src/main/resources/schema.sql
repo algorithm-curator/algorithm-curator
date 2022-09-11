@@ -40,7 +40,6 @@ CREATE TABLE quiz_solved_states
     quiz_id             bigint          DEFAULT NULL COMMENT 'quiz id',
     PRIMARY KEY (id),
     KEY quiz_solved_state_idx_user (user_id),
-    KEY quiz_solved_state_idx_solved_state (solved_state),
     CONSTRAINT fk_quiz_solved_state_to_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_quiz_solved_state_to_quiz FOREIGN KEY (quiz_id) REFERENCES quizzes (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) COMMENT '문제 풀이 상태 테이블';
