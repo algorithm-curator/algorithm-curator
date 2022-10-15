@@ -15,7 +15,7 @@ CREATE TABLE users
     created_at          timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at          timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     PRIMARY KEY (id),
-    KEY users_idx_nickname (nickname)
+    KEY users_idx_oauth_id (oauth_id)
 ) COMMENT '유저 테이블';
 
 CREATE TABLE quizzes
